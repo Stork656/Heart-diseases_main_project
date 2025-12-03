@@ -3,11 +3,12 @@ from sklearn.preprocessing import StandartScaler
 from pandas.api.types import is_numeric_dtype
 
 class Preprocessing:
+    """В данном классе реализована предобработка данных тремя различными способами"""
     def __init__(self, df):
         self.df = df
 
     def splitting(self) -> tuple[list[str]]:
-        '''Разделение на числовые и категориальные признаки'''
+        '''Получение списков категориальных и числовых признаков'''
 
         lst_cat_features = []
         lst_num_features = []
