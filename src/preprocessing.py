@@ -1,24 +1,26 @@
 import pandas as pd
-from sklearn.preprocessing import StandartScaler
-from pandas.api.types import is_numeric_dtype
+from data.loader import DataLoader
+from src.utils.logger import get_logger
 
-class Preprocessing:
-    """В данном классе реализована предобработка данных тремя различными способами"""
-    def __init__(self, df):
-        self.df = df
+class Preprocessor:
+    '''Data preprocessing class'''
 
-    def splitting(self) -> tuple[list[str]]:
-        '''Получение списков категориальных и числовых признаков'''
+    def __init__(self, df: pd.DataFrame):
+        if not isinstance(df, pd.DataFrame):
+            raise TypeError('Input must be a pandas DataFrame')
 
-        lst_cat_features = []
-        lst_num_features = []
-        for column in df.columns:
-            if not(is_numeric_dtype(df[column])):
-                lst_cat_features.append(column)
-            else:
-                lst_num_features.append(column)
+        self.df = df.copy()
+        self.logger = get_logger()
 
-        return lst_cat_features, lst_num_features
+        self.logger.info(f'Data preprocessor initialized. Shape: {self.df.shape}')
+
+
+
+loader = DataLoader()
+df = loader.load()
+pre = Preprocessor(df)
+print(df.head())
+
 
 
 
