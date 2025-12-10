@@ -1,15 +1,15 @@
 version: 1
-formatters: #как именно выглядит строка логов
-    simple: #название способа обработки - "простая"
-        format: "%(asctime)s - %(levelname)s - %(message)s" 
 
+formatters:
+    simple:
+        format: "%(asctime)s - %(levelname)s - %(message)s"
 
-handlers: #куда будут писаться логи (консоль, в файл, сервер и т.д.)
-    console: #имя (можно любое)
+handlers:
+    console:
         class: logging.StreamHandler
         level: INFO
         formatter: simple
-    
+
     file:
         class: logging.FileHandler
         level: INFO
@@ -17,9 +17,8 @@ handlers: #куда будут писаться логи (консоль, в ф�
         filename: "../logs/project.log"
         encoding: utf-8
         mode: "a"
-        
 
-loggers: #Перечисление логгеров и какие обработчики используем
+loggers:
     root:
         handlers: [console, file]
         level: INFO

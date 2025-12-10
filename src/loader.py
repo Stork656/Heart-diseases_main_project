@@ -23,11 +23,7 @@ class DataLoader:
             self.logger.info(f'Data successfully loaded. Shape: {self.df.shape}')
         except Exception as e:
             self.logger.error(f'Failed reading {self.path}. Error: {e}')
-            raise IOError(f'Failed reading <{self.path}>. Error: {e}')
+            self.logger.info(f'Failed reading <{self.path}>. Error: {e}')
 
         return self.df
 
-
-pre = DataLoader()
-df = pre.load()
-print(df.head())
