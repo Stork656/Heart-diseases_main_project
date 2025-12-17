@@ -1,29 +1,33 @@
 import pandas as pd
 import os.path
-from src.utils.logger import get_logger
+from src.utils.validator import Validator
 
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class DataLoader:
-    def __init__(self, path: str = '../data/raw/heart-diseases.csv'):
-        if not isinstance(path, str):
-            raise TypeError('Path must be a string')
+    """
+    Responsible for loading dataset from CSV.
+    """
 
-        if not os.path.isfile(path):
-            raise FileNotFoundError(f'File <{path}> does not exist')
+    def __init__(self, path: str = 'data/raw/heart-diseases.csv'):
+        full_path = os.path.join(project_root, path)
+        self.validator = Validator()
+        self.validator.check_file_path(full_path)
 
-        self.path = os.path.abspath(path)
-        self.df = None
-        self.logger = get_logger()
+        self.path: str = full_path
+        self.df: pd.DataFrame | None = None
 
 
     def load(self) -> pd.DataFrame:
-        '''Convert to a dataframe'''
-        try:
-            self.df = pd.read_csv(self.path)
-            self.logger.info(f'Data successfully loaded. Shape: {self.df.shape}')
-        except Exception as e:
-            self.logger.error(f'Failed reading {self.path}. Error: {e}')
-            self.logger.info(f'Failed reading <{self.path}>. Error: {e}')
+        """
+        Load CSV file into pandas DataFrame.
+        """
 
+        self.df = self.validator.load_csv(self.path)
         return self.df
 
+
+if __name__ == '__main__':
+    loader = DataLoader()
+    df = loader.load()
+    print(df.head())
