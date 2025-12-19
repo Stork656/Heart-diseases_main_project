@@ -11,7 +11,7 @@ class SimplePreprocessor(BasePreprocessor):
         Deletes a row if it finds missing values
         """
 
-        if super().check_missing():
+        if super().remove_missing():
             self.df = self.df.dropna(inplace = True)
             self.logger.info(f'Rows with missing values deleted')
 

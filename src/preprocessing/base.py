@@ -50,7 +50,7 @@ class BasePreprocessor:
             else:
                 feature_types['categorical'].append(col)
 
-        self.feature_types = feature_types
+        self.feature_types = dict(feature_types)
         features = '\n'.join(f'{key.title()}: {', '.join(map(str, value))}' for key, value in self.feature_types.items())
         self.logger.info(f'The features are distributed. \n{features}')
         return self.feature_types
@@ -65,7 +65,7 @@ class BasePreprocessor:
             self.df = self.df.drop_duplicates()
 
 
-    def check_missing(self) -> bool:
+    def remove_missing(self) -> bool:
         """
         Checks
         for missing values
