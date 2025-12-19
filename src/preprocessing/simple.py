@@ -5,15 +5,6 @@ class SimplePreprocessor(BasePreprocessor):
         super().__init__(df, target)
 
 
-    def remove_duplicates(self) -> None:
-        """
-        Deletes complete duplicate rows
-        """
-
-        if super().check_duplicates():
-            self.df = self.df.drop_duplicates()
-
-
 
     def remove_missing(self) -> None:
         """
