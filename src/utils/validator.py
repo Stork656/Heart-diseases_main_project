@@ -7,45 +7,38 @@ class Validator:
     def __init__(self):
         self.logger: Logger = get_logger()
 
-    def check_file_path(self, path: str) -> None:
+
+    def check_type_path(self, path: str) -> None:
         """
-        Checks file path and path type is correct
+        Checks type path is correct
         """
+
         if not isinstance(path, str):
             self.logger.error(f"Path must be a string: {type(path)}")
             raise TypeError(f"Path must be a string: {type(path)}")
+        self.logger.info(f'Path type - {type(path)} is valid.')
 
+
+    def check_file_exists(self, path: str) -> None:
+        """
+        Checks file is exist
+        """
         if not os.path.isfile(path):
             self.logger.error(f"File {path} does not exist.")
             raise FileNotFoundError(f"File {path} does not exist.")
-
-
-        self.logger.info('File path is valid.')
-
-
-    def load_csv(self, path: str) -> pd.DataFrame:
-        """
-        Checks the csv file upload
-        """
-        try:
-            df = pd.read_csv(path)
-            self.logger.info(f'Data successfully loaded. \nShape: {df.shape}\n')
-            return df
-
-        except Exception as e:
-            self.logger.error(f'Failed reading {path}. Error: {e}')
-            raise
+        self.logger.info(f'File {path} exist.')
 
 
     def check_df_type(self, df: pd.DataFrame) -> None:
         """
         Checks the df type is correct
         """
+
         if not isinstance(df, pd.DataFrame):
             self.logger.error(f"File must be a DataFrame: {type(df)}")
             raise TypeError(f"File must be a DataFrame: {type(df)}")
 
-        self.logger.info('File path is valid.')
+        self.logger.info(f'File type - {type(df)} is valid.')
 
 
     def check_target(self, target: str, df: pd.DataFrame) -> None:
@@ -59,7 +52,7 @@ class Validator:
         self.logger.info(f'Target column "{target}" found.')
 
 
-    def check_duplicates(self, df) -> bool:
+    def check_duplicates(self, df: pd.DataFrame) -> bool:
         """
         Checks for duplicate values
         """
