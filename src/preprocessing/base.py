@@ -56,13 +56,13 @@ class BasePreprocessor:
         return self.feature_types
 
 
-    def check_duplicates(self) -> bool:
+    def remove_duplicates(self) -> None:
         """
-        Checks for duplicate values
+        Deletes complete duplicate rows
         """
 
         if self.validator.check_duplicates(self.df):
-            return True
+            self.df = self.df.drop_duplicates()
 
 
     def check_missing(self) -> bool:
