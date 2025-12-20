@@ -67,8 +67,7 @@ class BasePreprocessor:
 
     def remove_missing(self) -> bool:
         """
-        Checks
-        for missing values
+        Checks for missing values
         """
 
         if self.validator.check_missing(self.df):
