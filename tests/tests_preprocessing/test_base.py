@@ -4,7 +4,6 @@ from src.preprocessing.base import BasePreprocessor
 from src.loader import DataLoader
 from src.utils.validator import Validator
 
-#Фикстура, а не parametrize т.к. так можно использовать один набор для всех тестов
 #Fixtures
 @pytest.fixture
 def expected():
