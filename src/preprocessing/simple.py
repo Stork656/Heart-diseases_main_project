@@ -12,7 +12,7 @@ class SimplePreprocessor(BasePreprocessor):
         """
 
         if super().remove_missing():
-            self.df = self.df.dropna(inplace = True)
+            self.df.dropna(inplace = True)
             self.logger.info(f'Rows with missing values deleted')
 
 
