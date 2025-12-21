@@ -10,7 +10,7 @@ def expected():
     expected = {
         'target': ['HeartDisease'],
         'binary': ['ExerciseAngina'],
-        'numeric': ['age'],
+        'numeric': ['age', 'Cholesterol', 'RestingBP'],
         'categorical': ['ChestPainType'],
     }
     return expected
