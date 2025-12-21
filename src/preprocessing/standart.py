@@ -1,101 +1,85 @@
+from src.preprocessing.base import BasePreprocessor
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
-from pandas.api.types import is_numeric_dtype
-from logging import Logger
-from src.loader import DataLoader
-from src.utils.logger import get_logger
-from collections import defaultdict
 
-
-class Preprocessor:
-    """
-    ***
-    """
-
+class StandartPreprocessor(BasePreprocessor):
     def __init__(self, df: pd.DataFrame, target: str = 'HeartDisease'):
-        if not isinstance(df, pd.DataFrame):
-            raise TypeError('Input must be a pandas DataFrame')
-
-        self.df: pd.DataFrame = df.copy()
-        self.target: str = target
-        self.feature_types: dict | None = None
-        self.logger: Logger = get_logger()
-
-        self.logger.info(f'Data preprocessor initialized. \nShape: {self.df.shape}\n')
+        super().__init__(df, target)
 
 
-    def split_feature_types(self) -> dict:
+    def remove_missing(self) -> None:
         """
-        Classify dataset columns into feature types.
-        Returns a dict with keys:
-            - target
-            - binary
-            - numeric
-            - categorical
+        Replaces the gaps with the average for numeric features
+        and the mode for categorical, binary, target
         """
 
-        feature_types = defaultdict(list)
-        feature_types['target'] = [self.target]
+        if super().remove_missing():
+            for feature in self.feature_types['numeric']:
+                self.df[feature].fillna(self.df[feature].mean(), inplace=True)
 
-        for col in self.df.drop(columns=[self.target]).columns:
-            if self.df[col].nunique() == 2:
-                feature_types['binary'].append(col)
-            elif is_numeric_dtype(self.df[col]):
-                feature_types['numeric'].append(col)
-            else:
-                feature_types['categorical'].append(col)
-
-        self.feature_types = dict(feature_types)
-        self.logger.info(f'Feature types: \n{dict(self.feature_types)}\n')
-        return self.feature_types
+            features_moda = self.feature_types['categorical'] + self.feature_types['binary'] + self.feature_types['target']
+            for feature in features_moda:
+                self.df[feature].fillna(self.df[feature].mode()[0], inplace=True)
 
 
-    def missing_values(self, way: str = 'simple') -> None:
+    def remove_emissions(self) -> None:
         """
-        Handle missing values in 3 ways:
-            - drop rows
-            - SimpleImputer
-            - KNNImputer
+        Removing percentile outliers
         """
 
-        if way == 'simple':
-            self.logger.info("Applying SimpleImputer for missing values")
-            result = self._simple_imputer()
-
-        elif way == 'drop':
-            self.logger.info("Dropping rows with missing values")
-            result = self._drop_rows()
-
-        elif way == 'knn':
-            self.logger.info("Applying KNNImputer for missing values")
-            result = self._knn_imputer()
-
-        else:
-            self.logger.error(f"Unknown missing-values strategy: {way}")
-            raise ValueError()
-
-        self.df = result
+        mask = pd.Series(True, index=self.df.index)
+        for feature in self.feature_types['numeric']:
+            q1 = self.df[feature].quantile(0.25)
+            q3 = self.df[feature].quantile(0.75)
+            margin = (q3 - q1) * 1.5
+            mask &= (self.df[feature] >= q1 - margin) & (self.df[feature] <= q3 + margin)
+        self.df = self.df.loc[mask]
 
 
-    def _drop_rows():
-        pass
+    def scaling(self) -> None:
+        """
+        Scaling of numerical features with StandardScaler
+        """
+
+        for feature in self.feature_types['numeric']:
+            scaler = StandardScaler()
+            fit_df = self.df[feature].to_frame()
+            scaler.fit(fit_df)
+            self.df[feature] = scaler.transform(fit_df)
 
 
-    def _simple_imputer():
-        pass
+    def encoding(self) -> None:
+        columns_to_encode = self.feature_types['categorical'] + self.feature_types['binary']
+
+        encoder = OneHotEncoder()
+        encoded_data = encoder.fit_transform(self.df[columns_to_encode])
+
+        encoded_df = pd.DataFrame.sparse.from_spmatrix(
+            encoded_data,
+            columns = encoder.get_feature_names_out(columns_to_encode),
+            index = self.df.index,
+        )
+
+        self.df = pd.concat([self.df.drop(columns=columns_to_encode), encoded_df], axis=1)
 
 
-    def _knn_imputer():
-        pass
+    def run_standart_preprocessor(self) -> None:
+        """
+        Run full standart preprocessing pipeline
+        """
+        super().split_feature_types()
+        self.remove_duplicates()
+        self.remove_missing()
+        self.remove_emissions()
+        self.scaling()
+        self.encoding()
 
 
 
 
-if __name__ == '__main__':
-    loader = DataLoader()
-    df = loader.load()
 
-    pre = Preprocessor(df)
-    pre.split_by_feature_type()
+
 
 
 
