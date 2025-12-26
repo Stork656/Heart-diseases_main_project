@@ -1,4 +1,5 @@
 import pytest
+import pandas as pd
 from src.preprocessing.simple import SimplePreprocessor
 
 
@@ -92,6 +93,17 @@ def test_encoding_real_data(real_data):
     assert all(dummy in sp.df.columns for dummy in dummies_col)
     assert len(sp.df) == len(df)
     assert all(num_feat in sp.df.columns for num_feat in sp.numeric_cols)
+
+
+@pytest.mark.parametrize("data", ["data_test", "real_data"])
+def test_run(request, data):
+    df = request.getfixturevalue(data)
+    sp = SimplePreprocessor(df, 'HeartDisease')
+    sp.run()
+
+    assert len(sp.df) <= len(df)
+    assert 'HeartDisease' in sp.df.columns
+    assert isinstance(sp.df, pd.DataFrame)
 
 
 

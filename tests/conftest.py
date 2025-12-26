@@ -7,12 +7,12 @@ from src.loader import DataLoader
 def data_test():
     df = pd.DataFrame(
         {
-            'HeartDisease': [1, 0, 1, 1],
-            'ExerciseAngina': ['Y', 'N', 'Y', 'Y'],
-            'age': [25, 30, 45, 25],
-            'ChestPainType': ['ASY', 'NAP', 'ATA', 'ASY'],
-            'Cholesterol': [100, 0, 600, 100],
-            'RestingBP': [130, 0, 120, 130],
+            'HeartDisease': [1, 0, 0, 1, 0],
+            'ExerciseAngina': ['Y', 'N', 'N', 'Y', 'N'],
+            'age': [25, 30, 45, 25, 50],
+            'ChestPainType': ['ASY', 'NAP', 'ATA', 'ASY', 'NAP'],
+            'Cholesterol': [100, 0, 600, 100, 300],
+            'RestingBP': [130, 0, 120, 130, 110],
         }
     )
     return df
