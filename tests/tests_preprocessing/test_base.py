@@ -36,7 +36,7 @@ def test_split_feature_types_binary_str(data_test, expected) :
 
 def test_split_feature_types_binary_num(data_test, expected):
     df = data_test.copy()
-    df['ExerciseAngina'] = [1, 0, 1, 0]
+    df['ExerciseAngina'] = [1, 0, 0, 1, 0]
     bp = BasePreprocessor(df, target='HeartDisease')
     feature_types = bp.split_feature_types()
     assert feature_types == expected
@@ -44,7 +44,7 @@ def test_split_feature_types_binary_num(data_test, expected):
 
 def test_split_feature_types_binary_bool(data_test, expected):
     df = data_test.copy()
-    df['ExerciseAngina'] = [True, False, True, False]
+    df['ExerciseAngina'] = [True, False, False, True, False]
     bp = BasePreprocessor(df, target='HeartDisease')
     feature_types = bp.split_feature_types()
     assert feature_types == expected
