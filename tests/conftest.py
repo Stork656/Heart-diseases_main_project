@@ -11,8 +11,8 @@ def data_test():
             'ExerciseAngina': ['Y', 'N', 'N', 'Y', 'N'],
             'age': [25, 30, 45, 25, 50],
             'ChestPainType': ['ASY', 'NAP', 'ATA', 'ASY', 'NAP'],
-            'Cholesterol': [100, 0, 600, 100, 300],
-            'RestingBP': [130, 0, 120, 130, 110],
+            'Cholesterol': [280, 1000, 300, 280, 310],
+            'RestingBP': [120, 0, 130, 120, 135],
         }
     )
     return df
