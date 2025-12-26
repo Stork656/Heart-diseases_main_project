@@ -1,8 +1,9 @@
 import pytest
-import pandas as pd
+import numpy as np
 import pathlib
 from src.utils.validator import Validator
-from src.loader import DataLoader
+from src.preprocessing.base import BasePreprocessor
+
 
 
 validator = Validator()
@@ -53,15 +54,31 @@ def test_check_target_negative(data_test):
 
 
 def test_split_features_positive(data_test):
-    pass
+    """
+    The validator check_split_features() is called inside split_feature_types()
+    """
+    bp = BasePreprocessor(data_test)
+    bp.split_feature_types()
 
 
 def test_split_features_negative(data_test):
-    pass
+    """
+    The validator check_split_features() is called inside split_feature_types()
+    """
+    data_test = data_test.copy()
+    data_test.pop('ExerciseAngina')
+    bp = BasePreprocessor(data_test, 'HeartDisease')
+    with pytest.raises(ValueError):
+        bp.split_feature_types()
 
 
 def test_split_features_real_data(real_data):
-    pass
+    """
+    The validator check_split_features() is called inside split_feature_types()
+    """
+    real_data = real_data.copy()
+    bp = BasePreprocessor(real_data, 'HeartDisease')
+    bp.split_feature_types()
 
 
 def test_check_duplicates_positive(data_test):
@@ -75,7 +92,7 @@ def test_check_duplicates_negative(data_test):
 
 
 def test_check_missing_negative(data_test):
-    assert validator.check_missing(data_test) == False
+    assert not validator.check_missing(data_test)
 
 
 def test_check_missing_positive(data_test):
@@ -85,14 +102,18 @@ def test_check_missing_positive(data_test):
 
 
 def test_check_column_exist_positive(data_test):
-    pass
+    columns = ['ExerciseAngina', 'ChestPainType']
+    validator.check_column_exist(data_test, columns)
 
 
 def test_check_column_exist_negative(data_test):
-    pass
+    columns = ['non-existent column']
+    with pytest.raises(TypeError):
+        validator.check_column_exist(data_test, columns)
 
 
 def test_check_column_exist_real_data(real_data):
-    pass
+    columns = ['ExerciseAngina', 'ChestPainType']
+    validator.check_column_exist(real_data, columns)
 
 

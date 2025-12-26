@@ -42,18 +42,20 @@ class BasePreprocessor:
             - categorical
         """
 
-        feature_types = defaultdict(list)
-        feature_types['target'] = [self.target]
+        self.feature_types = {
+            'target': [self.target],
+            'binary': [],
+            'numeric': [],
+            'categorical': []
+        }
 
         for col in self.df.drop(columns=[self.target]).columns:
             if self.df[col].nunique() == 2:
-                feature_types['binary'].append(col)
+                self.feature_types['binary'].append(col)
             elif is_numeric_dtype(self.df[col]):
-                feature_types['numeric'].append(col)
+                self.feature_types['numeric'].append(col)
             else:
-                feature_types['categorical'].append(col)
-
-        self.feature_types = dict(feature_types)
+                self.feature_types['categorical'].append(col)
 
         self.numeric_cols = self.feature_types['numeric']
         self.categorical_cols = self.feature_types['categorical']

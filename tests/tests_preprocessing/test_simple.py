@@ -1,8 +1,5 @@
 import pytest
-import pandas as pd
-from src.loader import DataLoader
 from src.preprocessing.simple import SimplePreprocessor
-from src.preprocessing.base import BasePreprocessor
 
 
 def test_remove_missing_positive(data_test):
@@ -64,34 +61,37 @@ def test_remove_emissions_real_data(real_data):
 def test_encoding_test_data(data_test):
     df = data_test.copy()
     sp = SimplePreprocessor(df, 'HeartDisease')
-    sp.feature_types = {
-        'categorical': ['ExerciseAngina', 'ChestPainType'],
-        'binary': [],
-    }
+    sp.split_feature_types()
+    encoding_cols = sp.categorical_cols + sp.binary_cols
+
     sp.encoding()
 
-    numerical_cols = ['age', 'Cholesterol', 'RestingBP']
-    categorical_cols = ['ExerciseAngina', 'ChestPainType']
-    dummies_col = [f'{col}_{val}' for col in categorical_cols for val in df[col].unique()]
+    dummies_col = [f'{col}_{val}' for col in encoding_cols for val in df[col].unique()]
 
     assert all(dummy in sp.df.columns for dummy in dummies_col)
     assert len(sp.df) == len(df)
-    assert all(num_feat in sp.df.columns for num_feat in numerical_cols)
+    assert all(num_feat in sp.df.columns for num_feat in sp.numeric_cols)
 
 
 def test_encoding_real_data(real_data):
     df = real_data.copy()
     sp = SimplePreprocessor(df, 'HeartDisease')
-    sp.run_simple_preprocessor()
 
+    sp.remove_duplicates()
+    sp.remove_missing()
+    sp.remove_emissions()
+    sp.split_feature_types()
 
-    numerical_cols = sp.feature_types['numeric']
-    categorical_cols = sp.feature_types['categorical'] + sp.feature_types['binary']
-    dummies_col = [f'{col}_{val}' for col in categorical_cols for val in sp.df[col].unique()]
+    encoding_cols = sp.categorical_cols + sp.binary_cols
+    df = sp.df
+
+    sp.encoding()
+
+    dummies_col = [f'{col}_{val}' for col in encoding_cols for val in df[col].unique()]
 
     assert all(dummy in sp.df.columns for dummy in dummies_col)
     assert len(sp.df) == len(df)
-    assert all(num_feat in sp.df.columns for num_feat in numerical_cols)
+    assert all(num_feat in sp.df.columns for num_feat in sp.numeric_cols)
 
 
 

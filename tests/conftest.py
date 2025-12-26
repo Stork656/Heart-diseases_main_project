@@ -17,8 +17,11 @@ def data_test():
     )
     return df
 
+
 @pytest.fixture
 def real_data():
     loader = DataLoader()
     df = loader.load()
     return df
+
+
