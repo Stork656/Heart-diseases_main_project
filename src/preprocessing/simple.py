@@ -1,7 +1,13 @@
 from src.preprocessing.base import BasePreprocessor
 import pandas as pd
 
+
 class SimplePreprocessor(BasePreprocessor):
+    """
+
+    """
+
+
     def __init__(self, df: pd.DataFrame, target: str = 'HeartDisease'):
         super().__init__(df, target)
 
@@ -25,8 +31,9 @@ class SimplePreprocessor(BasePreprocessor):
         """
 
         emissions = ['Cholesterol', 'RestingBP']
-        for em in emissions:
-            self.df = self.df.loc[(self.df[em] >= 50)]
+        if self.validator.check_column_exist(self.df, emissions):
+            for em in emissions:
+                self.df = self.df.loc[(self.df[em] >= 50)]
 
 
     def scaling(self) -> None:
@@ -42,33 +49,18 @@ class SimplePreprocessor(BasePreprocessor):
         Encoding of categorical and binary-categorical values
         """
 
-        columns_to_encode = self.feature_types['categorical'] + self.feature_types['binary']
+        columns_to_encode = self.categorical_cols + self.binary_cols
         self.df = pd.get_dummies(self.df, columns=columns_to_encode)
 
 
-    def run_simple_preprocessor(self):
+    def run(self):
         """
         Run full simple preprocessing pipeline
         """
 
+        self.logger.info(f'Running simple preprocessor')
         self.remove_duplicates()
         self.remove_missing()
-        super().split_feature_types()
         self.remove_emissions()
+        super().split_feature_types()
         self.encoding()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

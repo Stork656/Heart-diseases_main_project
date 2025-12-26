@@ -1,7 +1,6 @@
 import pandas as pd
 from pandas.api.types import is_numeric_dtype
 from logging import Logger
-from src.loader import DataLoader
 from src.utils.logger import get_logger
 from collections import defaultdict
 from src.utils.validator import Validator
@@ -21,12 +20,16 @@ class BasePreprocessor:
         self.df: pd.DataFrame = df.copy()
         self.target: str = target
         self.feature_types: dict | None = None
+        self.numeric_cols: list | None = None
+        self.categorical_cols: list | None = None
+        self.binary_cols: list | None = None
+
 
         #Enabling logging
         self.logger: Logger = get_logger()
-        self.logger.info(f'Base preprocessor initialized. '
-                         f'\nShape: {self.df.shape}\n'
-                         f'Target: {self.target}\n')
+        self.logger.info(f'Base preprocessor initialized,'
+                         f' shape: {self.df.shape},'
+                         f' target - "{self.target}".')
 
 
     def split_feature_types(self) -> dict:
@@ -51,8 +54,13 @@ class BasePreprocessor:
                 feature_types['categorical'].append(col)
 
         self.feature_types = dict(feature_types)
-        features = '\n'.join(f'{key.title()}: {', '.join(map(str, value))}' for key, value in self.feature_types.items())
-        self.logger.info(f'The features are distributed. \n{features}')
+
+        self.numeric_cols = self.feature_types['numeric']
+        self.categorical_cols = self.feature_types['categorical']
+        self.binary_cols = self.feature_types['binary']
+        self.target_col = self.feature_types['target'][0]
+
+        self.validator.check_split_features(self)
         return self.feature_types
 
 
@@ -72,16 +80,3 @@ class BasePreprocessor:
 
         if self.validator.check_missing(self.df):
             return True
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,107 +1,70 @@
+from src.preprocessing.base import BasePreprocessor
 import pandas as pd
-from pandas.api.types import is_numeric_dtype
-from logging import Logger
-from src.loader import DataLoader
-from src.utils.logger import get_logger
-from collections import defaultdict
+from sklearn.preprocessing import RobustScaler
+from  sklearn.impute import KNNImputer
+from sklearn.ensemble import IsolationForest
 
 
-class Preprocessor:
+class AdvancedPreprocessor(BasePreprocessor):
     """
-    ***
+
     """
+
 
     def __init__(self, df: pd.DataFrame, target: str = 'HeartDisease'):
-        if not isinstance(df, pd.DataFrame):
-            raise TypeError('Input must be a pandas DataFrame')
-
-        self.df: pd.DataFrame = df.copy()
-        self.target: str = target
-        self.feature_types: dict | None = None
-        self.logger: Logger = get_logger()
-
-        self.logger.info(f'Data preprocessor initialized. \nShape: {self.df.shape}\n')
+        super().__init__(df, target)
 
 
-    def split_feature_types(self) -> dict:
-        """
-        Classify dataset columns into feature types.
-        Returns a dict with keys:
-            - target
-            - binary
-            - numeric
-            - categorical
+    def encoding(self) -> None:
         """
 
-        feature_types = defaultdict(list)
-        feature_types['target'] = [self.target]
-
-        for col in self.df.drop(columns=[self.target]).columns:
-            if self.df[col].nunique() == 2:
-                feature_types['binary'].append(col)
-            elif is_numeric_dtype(self.df[col]):
-                feature_types['numeric'].append(col)
-            else:
-                feature_types['categorical'].append(col)
-
-        self.feature_types = dict(feature_types)
-        self.logger.info(f'Feature types: \n{dict(self.feature_types)}\n')
-        return self.feature_types
-
-
-    def missing_values(self, way: str = 'simple') -> None:
-        """
-        Handle missing values in 3 ways:
-            - drop rows
-            - SimpleImputer
-            - KNNImputer
         """
 
-        if way == 'simple':
-            self.logger.info("Applying SimpleImputer for missing values")
-            result = self._simple_imputer()
-
-        elif way == 'drop':
-            self.logger.info("Dropping rows with missing values")
-            result = self._drop_rows()
-
-        elif way == 'knn':
-            self.logger.info("Applying KNNImputer for missing values")
-            result = self._knn_imputer()
-
-        else:
-            self.logger.error(f"Unknown missing-values strategy: {way}")
-            raise ValueError()
-
-        self.df = result
+        encoding_data = self.categorical_cols + self.binary_cols
+        for column in encoding_data:
+            freq = self.df[column].value_counts(normalize=True)
+            self.df[column] = self.df[column].map(freq)
 
 
-    def _drop_rows():
-        pass
+    def scaling(self) -> None:
+        """
+        Scaling of numerical features with RobustScaler
+        """
 
-
-    def _simple_imputer():
-        pass
-
-
-    def _knn_imputer():
-        pass
+        scaler = RobustScaler()
+        self.df[self.numeric_cols] = self.df[self.numeric_cols].astype(float)
+        self.df.loc[:, self.numeric_cols] = scaler.fit_transform(self.df.loc[:, self.numeric_cols])
 
 
 
+    def remove_missing(self) -> None:
+        """
+        Remove the missing values from dataframe with KNNImputer
+        (number of neighbors = 5)
+        """
 
-if __name__ == '__main__':
-    loader = DataLoader()
-    df = loader.load()
-
-    pre = Preprocessor(df)
-    pre.split_by_feature_type()
-
-
-
-
+        if super().remove_missing():
+            imputer = KNNImputer(n_neighbors=5)
+            self.df.loc[:, :] = imputer.fit_transform(self.df)
 
 
+    def remove_emissions(self) -> None:
+        """
+
+        """
+        iso = IsolationForest(contamination='auto', random_state=42)
+        mask = iso.fit_predict(self.df[self.numeric_cols])
+        self.df = self.df[mask == 1]
 
 
+    def run(self) -> None:
+        """
+        Run full advansed preprocessing pipeline
+        """
 
+        self.remove_duplicates()
+        super().split_feature_types()
+        self.encoding()
+        self.scaling()
+        self.remove_missing()
+        self.remove_emissions()

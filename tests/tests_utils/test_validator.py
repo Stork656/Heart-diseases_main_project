@@ -52,6 +52,18 @@ def test_check_target_negative(data_test):
         validator.check_target(target, data_test)
 
 
+def test_split_features_positive(data_test):
+    pass
+
+
+def test_split_features_negative(data_test):
+    pass
+
+
+def test_split_features_real_data(real_data):
+    pass
+
+
 def test_check_duplicates_positive(data_test):
     assert validator.check_duplicates(data_test)
 
@@ -70,4 +82,17 @@ def test_check_missing_positive(data_test):
     df = data_test.copy()
     df.iloc[0, 0] = None
     assert validator.check_missing(df) == True
+
+
+def test_check_column_exist_positive(data_test):
+    pass
+
+
+def test_check_column_exist_negative(data_test):
+    pass
+
+
+def test_check_column_exist_real_data(real_data):
+    pass
+
 
