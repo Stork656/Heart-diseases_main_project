@@ -1,3 +1,4 @@
+import numpy as np
 import pytest
 import pandas as pd
 from src.preprocessing.standart import StandartPreprocessor
@@ -90,28 +91,53 @@ def test_remove_emissions_real_data(real_data) -> None:
         assert all(val not in stp.df[col].values for val in values)
 
 
-def test_encoding_test_data(data_test) -> None:
-    pass
+@pytest.mark.parametrize('data', ['data_test', 'real_data'])
+def test_encoding_data(request, data) -> None:
+    df = request.getfixturevalue(data).copy()
+    stp = StandartPreprocessor(df)
+    stp.split_feature_types()
+
+    encoding_cols = stp.categorical_cols + stp.binary_cols
+    numerical_cols = stp.numeric_cols.copy()
+    stp.remove_missing()
+    cleaned_df = stp.df
+
+    dummies_col = [f'{col}_{val}' for col in encoding_cols for val in cleaned_df[col].unique()]
+
+    stp.encoding()
+
+    assert all(dummy in stp.df.columns for dummy in dummies_col)
+    assert all(col in stp.df.columns for col in numerical_cols)
+    assert all(col not in stp.df.columns for col in encoding_cols)
+    assert stp.df.shape[1] > cleaned_df.shape[1] and stp.df.shape[0] == cleaned_df.shape[0]
+    assert not stp.df.isna().values.any()
 
 
-def test_encoding_real_data(real_data) -> None:
-    pass
+@pytest.mark.parametrize('data', ['data_test', 'real_data'])
+def test_scaling(request, data) -> None:
+    df = request.getfixturevalue(data).copy()
+    stp = StandartPreprocessor(df)
+    stp.split_feature_types()
 
+    stp.remove_missing()
+    stp.remove_emissions()
+    stp.encoding()
 
-def test_scaling_test_data(data_test) -> None:
-    pass
+    stp.scaling()
 
-
-def test_scaling_real_data(real_data) -> None:
-    pass
+    for col in stp.numeric_cols:
+        mean = stp.df[col].mean()
+        std = stp.df[col].std(ddof=0)
+        assert np.isclose(mean, 0, atol=1e-7)
+        assert np.isclose(std, 1, atol=1e-7)
 
 
 @pytest.mark.parametrize("data", ["data_test", "real_data"])
 def test_run(request, data):
     df = request.getfixturevalue(data)
-    sp = StandartPreprocessor(df, 'HeartDisease')
-    sp.run()
+    stp = StandartPreprocessor(df, 'HeartDisease')
+    stp.run()
 
-    assert len(sp.df) <= len(df)
-    assert 'HeartDisease' in sp.df.columns
-    assert isinstance(sp.df, pd.DataFrame)
+    assert len(stp.df) <= len(df)
+    assert 'HeartDisease' in stp.df.columns
+    assert isinstance(stp.df, pd.DataFrame)

@@ -74,25 +74,29 @@ def test_encoding_test_data(data_test):
     assert all(num_feat in sp.df.columns for num_feat in sp.numeric_cols)
 
 
-def test_encoding_real_data(real_data):
-    df = real_data.copy()
+@pytest.mark.parametrize('data', ['data_test', 'real_data'])
+def test_encoding_data(request, data) -> None:
+    df = request.getfixturevalue(data).copy()
     sp = SimplePreprocessor(df, 'HeartDisease')
 
     sp.remove_duplicates()
     sp.remove_missing()
     sp.remove_emissions()
     sp.split_feature_types()
+    cleaned_df = sp.df.copy()
 
     encoding_cols = sp.categorical_cols + sp.binary_cols
-    df = sp.df
+    numerical_cols = sp.numeric_cols.copy()
+
+    dummies_col = [f'{col}_{val}' for col in encoding_cols for val in cleaned_df[col].unique()]
 
     sp.encoding()
 
-    dummies_col = [f'{col}_{val}' for col in encoding_cols for val in df[col].unique()]
-
     assert all(dummy in sp.df.columns for dummy in dummies_col)
-    assert len(sp.df) == len(df)
-    assert all(num_feat in sp.df.columns for num_feat in sp.numeric_cols)
+    assert all(col in sp.df.columns for col in numerical_cols)
+    assert all(col not in sp.df.columns for col in encoding_cols)
+    assert sp.df.shape[1] > cleaned_df.shape[1] and sp.df.shape[0] == cleaned_df.shape[0]
+    assert not sp.df.isna().values.any()
 
 
 @pytest.mark.parametrize("data", ["data_test", "real_data"])
