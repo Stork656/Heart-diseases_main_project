@@ -61,7 +61,7 @@ def test_remove_missing_real_data(real_data):
     adp.encoding()
     adp.remove_missing()
 
-    assert adp.df.shape == df.shape
+    assert adp.df.shape[0] == df.shape[0] - 5 # Because there are 5 missing in the target and they were simply deleted.
     assert adp.df.notna().all().all()
 
 

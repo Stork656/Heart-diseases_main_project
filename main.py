@@ -5,8 +5,9 @@ from pathlib import Path
 from src.utils.logger import get_logger
 from src.loader import DataLoader
 from src.preprocessing.simple import SimplePreprocessor
-from src.preprocessing.standart import StandartPreprocessor
+from src.preprocessing.standard import StandardPreprocessor
 from src.preprocessing.advanced import AdvancedPreprocessor
+from src.utils.splitter import splitter
 
 
 def setup_logging(path = 'configs/logging.yaml'):
@@ -43,8 +44,15 @@ def main():
 
     # Run preprocessing
     run_preprocessing(SimplePreprocessor, df, 'simple.csv')
-    run_preprocessing(StandartPreprocessor, df, 'standart.csv')
+    run_preprocessing(StandardPreprocessor, df, 'standard.csv')
     run_preprocessing(AdvancedPreprocessor, df, 'advanced.csv')
+
+    # Run splitting
+    file_names = ['simple.csv', 'standard.csv', 'advanced.csv']
+    for name in file_names:
+        file_path = processed_dir / name
+        splitter(file_path, name.replace('.csv', ''))
+
 
 
 

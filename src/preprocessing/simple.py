@@ -64,3 +64,7 @@ class SimplePreprocessor(BasePreprocessor):
         self.remove_emissions()
         super().split_feature_types()
         self.encoding()
+
+
+        counts = self.df[self.target].value_counts()
+        self.logger.info(f'Target balance after simple preprocessing:\n{counts}.')

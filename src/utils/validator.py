@@ -1,7 +1,7 @@
-import os
 import pandas as pd
 from logging import Logger
 from src.utils.logger import get_logger
+from pathlib import Path
 
 
 class Validator:
@@ -9,24 +9,24 @@ class Validator:
         self.logger: Logger = get_logger()
 
 
-    def check_type_path(self, path: str) -> None:
+    def check_type_path(self, path: Path) -> None:
         """
         Checks type path is correct.
         """
 
-        if not isinstance(path, str):
-            self.logger.error(f"Path must be a string: {type(path)}.")
-            raise TypeError(f"Path must be a string: {type(path)}.")
+        if not isinstance(path, Path):
+            self.logger.error(f"Path must be a pathlib.Path, got: {type(path)}.")
+            raise TypeError(f"Path must be a pathlib.Path, got: {type(path)}.")
 
         self.logger.info(f'Path type - {type(path)} is valid.')
 
 
-    def check_file_exists(self, path: str) -> None:
+    def check_file_exists(self, path: Path) -> None:
         """
         Checks file is exist
         """
 
-        if not os.path.isfile(path):
+        if not path.is_file():
             self.logger.error(f"File {path} does not exist.")
             raise FileNotFoundError(f"File {path} does not exist.")
 

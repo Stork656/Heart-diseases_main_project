@@ -1,13 +1,13 @@
 import numpy as np
 import pytest
 import pandas as pd
-from src.preprocessing.standart import StandartPreprocessor
+from src.preprocessing.standard import StandardPreprocessor
 
 
 def test_remove_missing_positive(data_test) -> None:
     df = data_test.copy()
     df.iloc[0, 0] = None
-    stp = StandartPreprocessor(df)
+    stp = StandardPreprocessor(df)
     stp.split_feature_types()
     stp.remove_missing()
 
@@ -18,7 +18,7 @@ def test_remove_missing_positive(data_test) -> None:
 
 def test_remove_missing_negative(data_test) -> None:
     df = data_test.copy()
-    stp = StandartPreprocessor(df)
+    stp = StandardPreprocessor(df)
     stp.split_feature_types()
     stp.remove_missing()
 
@@ -29,7 +29,7 @@ def test_remove_missing_real_data(real_data) -> None:
     df = real_data.copy()
     mask = {col: df[col].isna() for col in df.columns}
 
-    stp = StandartPreprocessor(df)
+    stp = StandardPreprocessor(df)
     stp.split_feature_types()
     stp.remove_missing()
 
@@ -52,7 +52,7 @@ def test_remove_missing_real_data(real_data) -> None:
 
 def test_remove_emissions_positive(data_test) -> None:
     df = data_test.copy()
-    stp = StandartPreprocessor(df)
+    stp = StandardPreprocessor(df)
     stp.split_feature_types()
 
     outliers = {'Cholesterol': [1000], 'RestingBP': [0]}
@@ -68,7 +68,7 @@ def test_remove_emissions_positive(data_test) -> None:
 
 def test_remove_emissions_negative(data_test) -> None:
     df = data_test.copy()
-    stp = StandartPreprocessor(df)
+    stp = StandardPreprocessor(df)
     stp.split_feature_types()
     stp.df.loc[1, 'Cholesterol'] = 290
     stp.df.loc[1, 'RestingBP'] = 125
@@ -80,7 +80,7 @@ def test_remove_emissions_negative(data_test) -> None:
 
 def test_remove_emissions_real_data(real_data) -> None:
     df = real_data.copy()
-    stp = StandartPreprocessor(df)
+    stp = StandardPreprocessor(df)
     stp.split_feature_types()
 
     outliers = {'Cholesterol': [0], 'RestingBP': [0]}
@@ -94,7 +94,7 @@ def test_remove_emissions_real_data(real_data) -> None:
 @pytest.mark.parametrize('data', ['data_test', 'real_data'])
 def test_encoding_data(request, data) -> None:
     df = request.getfixturevalue(data).copy()
-    stp = StandartPreprocessor(df)
+    stp = StandardPreprocessor(df)
     stp.split_feature_types()
 
     encoding_cols = stp.categorical_cols + stp.binary_cols
@@ -116,7 +116,7 @@ def test_encoding_data(request, data) -> None:
 @pytest.mark.parametrize('data', ['data_test', 'real_data'])
 def test_scaling(request, data) -> None:
     df = request.getfixturevalue(data).copy()
-    stp = StandartPreprocessor(df)
+    stp = StandardPreprocessor(df)
     stp.split_feature_types()
 
     stp.remove_missing()
@@ -135,7 +135,7 @@ def test_scaling(request, data) -> None:
 @pytest.mark.parametrize("data", ["data_test", "real_data"])
 def test_run(request, data):
     df = request.getfixturevalue(data)
-    stp = StandartPreprocessor(df, 'HeartDisease')
+    stp = StandardPreprocessor(df, 'HeartDisease')
     stp.run()
 
     assert len(stp.df) <= len(df)

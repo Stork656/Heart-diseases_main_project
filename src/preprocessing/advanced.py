@@ -31,6 +31,7 @@ class AdvancedPreprocessor(BasePreprocessor):
         Remove the missing values from dataframe with KNNImputer
         (number of neighbors = 5)
         """
+        self.df = self.df.dropna(subset=[self.target])
 
         if super().remove_missing():
             imputer = KNNImputer(n_neighbors=5)
@@ -67,3 +68,7 @@ class AdvancedPreprocessor(BasePreprocessor):
         self.remove_missing()
         self.scaling()
         self.remove_emissions()
+
+        counts = self.df[self.target].value_counts()
+        self.logger.info(f'Target balance after advanced preprocessing:\n{counts}.')
+
