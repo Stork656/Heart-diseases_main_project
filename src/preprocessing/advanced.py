@@ -26,17 +26,6 @@ class AdvancedPreprocessor(BasePreprocessor):
             self.df[column] = self.df[column].map(freq)
 
 
-    def scaling(self) -> None:
-        """
-        Scaling of numerical features with RobustScaler
-        """
-
-        scaler = RobustScaler()
-        self.df[self.numeric_cols] = self.df[self.numeric_cols].astype(float)
-        self.df.loc[:, self.numeric_cols] = scaler.fit_transform(self.df.loc[:, self.numeric_cols])
-
-
-
     def remove_missing(self) -> None:
         """
         Remove the missing values from dataframe with KNNImputer
@@ -46,6 +35,16 @@ class AdvancedPreprocessor(BasePreprocessor):
         if super().remove_missing():
             imputer = KNNImputer(n_neighbors=5)
             self.df.loc[:, :] = imputer.fit_transform(self.df)
+
+
+    def scaling(self) -> None:
+        """
+        Scaling of numerical features with RobustScaler
+        """
+
+        scaler = RobustScaler()
+        self.df[self.numeric_cols] = self.df[self.numeric_cols].astype(float)
+        self.df.loc[:, self.numeric_cols] = scaler.fit_transform(self.df.loc[:, self.numeric_cols])
 
 
     def remove_emissions(self) -> None:
@@ -65,6 +64,6 @@ class AdvancedPreprocessor(BasePreprocessor):
         self.remove_duplicates()
         super().split_feature_types()
         self.encoding()
-        self.scaling()
         self.remove_missing()
+        self.scaling()
         self.remove_emissions()
