@@ -5,7 +5,7 @@ from src.utils.logger import get_logger
 from sklearn.model_selection import train_test_split
 
 
-def splitter(file_path: Path, name: str, target: str = 'HeartDisease'):
+def splitter(file_path: Path, name: str, target: str = 'HeartDisease') -> None:
     """
 
     """
@@ -24,6 +24,10 @@ def splitter(file_path: Path, name: str, target: str = 'HeartDisease'):
     X = df.drop(columns=[target])
     y = df[target]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
+    logger.info(f'\ntrain: {X_train.shape}, '
+                f'\ntest: {X_test.shape}, '
+                f'\ntrain_target: {y_train.shape}, '
+                f'\ntest_target: {y_test.shape}')
 
     save_dir = Path('data/splits')
     save_dir.mkdir(parents=True, exist_ok=True)

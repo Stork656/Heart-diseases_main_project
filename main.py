@@ -1,4 +1,6 @@
 import logging.config
+
+import pandas as pd
 import yaml
 import os
 from pathlib import Path
@@ -8,6 +10,7 @@ from src.preprocessing.simple import SimplePreprocessor
 from src.preprocessing.standard import StandardPreprocessor
 from src.preprocessing.advanced import AdvancedPreprocessor
 from src.utils.splitter import splitter
+from src.models.training import Models
 
 
 def setup_logging(path = 'configs/logging.yaml'):
@@ -52,6 +55,19 @@ def main():
     for name in file_names:
         file_path = processed_dir / name
         splitter(file_path, name.replace('.csv', ''))
+
+    split_dir = Path('data/splits')
+
+    for name in file_names:
+        name = name.replace('.csv', '')
+        X_train = pd.read_csv(split_dir / f'{name}_X_train.csv')
+        X_test = pd.read_csv(split_dir / f'{name}_X_test.csv')
+        y_train = pd.read_csv(split_dir / f'{name}_y_train.csv').squeeze()
+        y_test = pd.read_csv(split_dir / f'{name}_y_test.csv').squeeze()
+
+        logger.info(f'Start train {name} pipline.')
+        models = Models(X_train, y_train, preprocessing_type=name)
+        models.train_models()
 
 
 
