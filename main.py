@@ -4,6 +4,8 @@ import pandas as pd
 import yaml
 import os
 from pathlib import Path
+
+from src.models.evaluation import Evaluate
 from src.utils.logger import get_logger
 from src.loader import DataLoader
 from src.preprocessing.simple import SimplePreprocessor
@@ -11,7 +13,7 @@ from src.preprocessing.standard import StandardPreprocessor
 from src.preprocessing.advanced import AdvancedPreprocessor
 from src.utils.splitter import splitter
 from src.models.training import Models
-
+from src.models.evaluation import Evaluate
 
 def setup_logging(path = 'configs/logging.yaml'):
     if not os.path.isfile(path):
@@ -68,6 +70,11 @@ def main():
         logger.info(f'Start train {name} pipline.')
         models = Models(X_train, y_train, preprocessing_type=name)
         models.train_models()
+
+        logger.info(f'Start evaluate {name} pipline.')
+        ev = Evaluate(X_test, y_test, preprocessing_type=name)
+        ev.evaluate()
+
 
 
 
