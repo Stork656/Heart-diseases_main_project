@@ -1,0 +1,40 @@
+models:
+  LR:
+    class: sklearn.linear_model.LogisticRegression
+    params:
+      C: [0.01, 0.1, 1, 10, 100]
+      max_iter: [5000, 10000]
+      l1_ratio: [0.2, 0.5, 0.8]
+  SVM:
+    class: sklearn.svm.SVC
+    params:
+      C: [0.1, 1, 10, 100]
+      kernel: ['linear', 'rbf']
+      gamma: ['scale', 'auto']
+  KNN:
+    class: sklearn.neighbors.KNeighborsClassifier
+    params:
+      n_neighbors: [3, 5, 7]
+      leaf_size: [10, 20, 30]
+      weights: ['uniform', 'distance']
+      p: [1, 2]
+  RF:
+    class: sklearn.ensemble.RandomForestClassifier
+    params:
+      n_estimators: [100, 200]
+      max_depth: [null, 5, 10]
+  GB:
+    class: sklearn.ensemble.GradientBoostingClassifier
+    params:
+      n_estimators: [100, 200]
+      learning_rate: [0.01, 0.1]
+  Ada:
+    class: sklearn.ensemble.AdaBoostClassifier
+    params:
+      n_estimators: [50, 100]
+      learning_rate: [0.01, 0.1]
+
+gridsearch:
+  cv: 5
+  scoring: accuracy
+  n_jobs: -1

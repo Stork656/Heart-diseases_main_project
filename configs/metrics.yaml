@@ -1,0 +1,17 @@
+metrics:
+    accuracy:
+        class: sklearn.metrics.accuracy_score
+    precision:
+        class: sklearn.metrics.precision_score
+        params:
+            average: binary
+    recall:
+        class: sklearn.metrics.recall_score
+        params:
+            average: binary
+    f1:
+        class: sklearn.metrics.f1_score
+        params:
+            average: binary
+    roc_auc:
+        class: sklearn.metrics.roc_auc_score
