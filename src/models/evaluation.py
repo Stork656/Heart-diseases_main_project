@@ -73,9 +73,11 @@ class Evaluate:
             y_pred = model.predict(self.X_test)
 
             if hasattr(model, 'predict_proba'):
-                y_proba = model.predict_proba(self.X_test)[:, 1]
+                y_score = model.predict_proba(self.X_test)[:, 1]
+            elif hasattr(model, 'decision_function'):
+                y_score = model.decision_function(self.X_test)
             else:
-                y_proba = None
+                y_score = None
 
 
             row = {
@@ -87,14 +89,16 @@ class Evaluate:
                 params = metric_data['params']
 
                 if metric_name == 'roc_auc':
-                    if y_proba is not None:
-                        row[metric_name] = metric_fn(self.y_test, y_proba, **params)
+                    if y_score is not None:
+                        row[metric_name] = metric_fn(self.y_test, y_score, **params)
                     else:
                         row[metric_name] = None
                 else:
                     row[metric_name] = metric_fn(self.y_test, y_pred, **params)
 
             results.append(row)
+
+
 
 
         df_results = pd.DataFrame(results)
