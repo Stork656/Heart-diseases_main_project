@@ -1,4 +1,5 @@
 import importlib
+import numpy as np
 import pandas as pd
 import yaml
 import joblib
@@ -68,7 +69,9 @@ class Evaluate:
         '''
 
         '''
-        results = []
+        metrics = []
+        y_scores = {}
+
         for model_name, model in self.models.items():
             y_pred = model.predict(self.X_test)
 
@@ -80,10 +83,11 @@ class Evaluate:
                 y_score = None
 
 
-            row = {
-                "model": model_name
-            }
+            if y_score is not None:
+                y_scores[model_name] = y_score
 
+
+            row = {"model": model_name}
             for metric_name, metric_data in self.metrics.items():
                 metric_fn = metric_data['fn']
                 params = metric_data['params']
@@ -96,16 +100,17 @@ class Evaluate:
                 else:
                     row[metric_name] = metric_fn(self.y_test, y_pred, **params)
 
-            results.append(row)
+            metrics.append(row)
 
-
-
-
-        df_results = pd.DataFrame(results)
+        df_metrics = pd.DataFrame(metrics)
         file_path = self.save_path / f'{self.preprocessing_type}_metrics.csv'
-        df_results.to_csv(file_path, index=False)
+        df_metrics.to_csv(file_path, index=False)
+        self.logger.info(f"Metrics saved to '{file_path}':\n{df_metrics}")
 
-        self.logger.info(f"Metrics saved to '{file_path}':\n{df_results}")
+        if y_scores:
+            scores_file = self.save_path / f'{self.preprocessing_type}_y_scores.npy'
+            np.save(scores_file, y_scores)
+            self.logger.info(f"Scores saved to {scores_file}")
 
 
 
