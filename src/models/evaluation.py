@@ -71,9 +71,12 @@ class Evaluate:
         '''
         metrics = []
         y_scores = {}
+        y_predictions = {}
 
         for model_name, model in self.models.items():
             y_pred = model.predict(self.X_test)
+            y_predictions[model_name] = y_pred
+
 
             if hasattr(model, 'predict_proba'):
                 y_score = model.predict_proba(self.X_test)[:, 1]
@@ -106,6 +109,10 @@ class Evaluate:
         file_path = self.save_path / f'{self.preprocessing_type}_metrics.csv'
         df_metrics.to_csv(file_path, index=False)
         self.logger.info(f"Metrics saved to '{file_path}':\n{df_metrics}")
+
+        predictions_file = self.save_path / f'{self.preprocessing_type}_y_predict.npy'
+        np.save(predictions_file, y_predictions)
+        self.logger.info(f"Predictions saved to {predictions_file}")
 
         if y_scores:
             scores_file = self.save_path / f'{self.preprocessing_type}_y_scores.npy'
