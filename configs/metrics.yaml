@@ -9,9 +9,10 @@ metrics:
         class: sklearn.metrics.recall_score
         params:
             average: binary
-    f1:
-        class: sklearn.metrics.f1_score
+    f2:
+        class: sklearn.metrics.fbeta_score
         params:
+            beta: 2
             average: binary
     roc_auc:
         class: sklearn.metrics.roc_auc_score
