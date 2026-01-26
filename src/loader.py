@@ -12,10 +12,13 @@ class DataLoader:
     Attributes:
         logger : Logger
             Logger instance for logging messages and saving logs
+
         validator : Validator
             Validator instance for validating input data
+
         path : Path
             Path to CSV file
+
         df : pd.DataFrame or None
             Loaded DataFrame (None until loaded)
     """
