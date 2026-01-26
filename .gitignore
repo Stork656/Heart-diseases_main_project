@@ -220,4 +220,4 @@ data/processed/*
 models/
 
 #Разделение на train/test
-splits/
+data/splits/*
