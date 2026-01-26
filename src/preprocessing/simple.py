@@ -22,7 +22,7 @@ class SimplePreprocessor(BasePreprocessor):
             self.logger.info(f'Rows with missing values deleted')
 
 
-    def remove_emissions(self) -> None:
+    def remove_outliers(self) -> None:
         """
         Deletes unrealistic values
         EDA showed:
@@ -61,7 +61,7 @@ class SimplePreprocessor(BasePreprocessor):
         self.logger.info(f'Running simple preprocessor')
         self.remove_duplicates()
         self.remove_missing()
-        self.remove_emissions()
+        self.remove_outliers()
         super().split_feature_types()
         self.encoding()
 

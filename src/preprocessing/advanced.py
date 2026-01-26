@@ -48,7 +48,7 @@ class AdvancedPreprocessor(BasePreprocessor):
         self.df.loc[:, self.numeric_cols] = scaler.fit_transform(self.df.loc[:, self.numeric_cols])
 
 
-    def remove_emissions(self) -> None:
+    def remove_outliers(self) -> None:
         """
 
         """
@@ -67,7 +67,7 @@ class AdvancedPreprocessor(BasePreprocessor):
         self.encoding()
         self.remove_missing()
         self.scaling()
-        self.remove_emissions()
+        self.remove_outliers()
 
         counts = self.df[self.target].value_counts()
         self.logger.info(f'Target balance after advanced preprocessing:\n{counts}.')

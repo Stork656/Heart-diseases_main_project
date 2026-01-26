@@ -28,7 +28,7 @@ class StandardPreprocessor(BasePreprocessor):
                 self.df[feature].fillna(self.df[feature].mode()[0], inplace=True)
 
 
-    def remove_emissions(self) -> None:
+    def remove_outliers(self) -> None:
         """
         Removing percentile outliers
         """
@@ -81,7 +81,7 @@ class StandardPreprocessor(BasePreprocessor):
         self.remove_duplicates()
         super().split_feature_types()
         self.remove_missing()
-        self.remove_emissions()
+        self.remove_outliers()
         self.encoding()
         self.scaling()
 
