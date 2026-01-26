@@ -23,13 +23,13 @@ class DataLoader:
             Loaded DataFrame (None until loaded)
     """
 
-    def __init__(self, path: Path = Path('data/raw/heart-diseases.csv')):
+    def __init__(self, path: Path = Path("data/raw/heart-diseases.csv")):
         """
         Initializes DataLoader.
 
         Parameters:
             path : Path, optional
-                Path to the CSV file (default 'data/raw/heart-diseases.csv')
+                Path to the CSV file (default "data/raw/heart-diseases.csv")
         """
 
         # Component initialization
