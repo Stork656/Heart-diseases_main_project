@@ -5,7 +5,6 @@ import yaml
 import os
 from pathlib import Path
 
-from src.models.evaluation import Evaluate
 from src.utils.logger import get_logger
 from src.loader import DataLoader
 from src.preprocessing.simple import SimplePreprocessor

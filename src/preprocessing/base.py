@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from pandas.api.types import is_numeric_dtype
 from logging import Logger
@@ -30,6 +31,13 @@ class BasePreprocessor:
         self.logger.info(f'Base preprocessor initialized,'
                          f' shape: {self.df.shape},'
                          f' target - "{self.target}".')
+
+        self.replace_cholesterol_zeros()
+
+    def replace_cholesterol_zeros(self):
+        n_zeros = (self.df['Cholesterol'] == 0).sum()
+        self.df['Cholesterol'].replace(0, np.nan, inplace=True)
+        self.logger.info(f'Replaced {n_zeros} zeros with NaN in Cholesterol column.')
 
 
     def split_feature_types(self) -> dict:

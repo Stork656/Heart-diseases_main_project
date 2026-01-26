@@ -29,11 +29,8 @@ class SimplePreprocessor(BasePreprocessor):
         - Cholesterol
         - RestingBP
         """
-
-        emissions = ['Cholesterol', 'RestingBP']
-        if self.validator.check_column_exist(self.df, emissions):
-            for em in emissions:
-                self.df = self.df.loc[(self.df[em] >= 50)]
+        if self.validator.check_column_exist(self.df, ['RestingBP']):
+            self.df = self.df.loc[(self.df['RestingBP'] >= 50)]
 
 
     def scaling(self) -> None:
@@ -64,7 +61,6 @@ class SimplePreprocessor(BasePreprocessor):
         self.remove_outliers()
         super().split_feature_types()
         self.encoding()
-
 
         counts = self.df[self.target].value_counts()
         self.logger.info(f'Target balance after simple preprocessing:\n{counts}.')

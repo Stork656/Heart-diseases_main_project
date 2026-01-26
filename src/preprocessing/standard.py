@@ -86,4 +86,4 @@ class StandardPreprocessor(BasePreprocessor):
         self.scaling()
 
         counts = self.df[self.target].value_counts()
-        self.logger.info(f'Target balance after standart preprocessing:\n{counts}')
+        self.logger.info(f'Target balance after standard preprocessing:\n{counts}')
