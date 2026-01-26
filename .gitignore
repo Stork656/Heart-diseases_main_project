@@ -218,3 +218,6 @@ data/processed/*
 
 #Обученные модели
 models/
+
+#Разделение на train/test
+splits/
