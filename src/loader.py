@@ -34,7 +34,7 @@ class DataLoader:
 
         # Component initialization
         self.logger: Logger = get_logger()
-        self.validator = Validator()
+        self.validator: Validator = Validator()
 
         # Variables initialization
         self.path: Path = path.resolve()
@@ -52,6 +52,7 @@ class DataLoader:
                 Loaded DataFrame
         """
 
+        # Loading data
         self.df = pd.read_csv(self.path)
         self.logger.info(f"DataFrame is loaded. \nShape: {self.df.shape}\n")
         return self.df
