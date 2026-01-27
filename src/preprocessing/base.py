@@ -3,7 +3,6 @@ import pandas as pd
 from pandas.api.types import is_numeric_dtype
 from logging import Logger
 from src.utils.logger import get_logger
-from collections import defaultdict
 from src.utils.validator import Validator
 
 class BasePreprocessor:
@@ -33,6 +32,7 @@ class BasePreprocessor:
                          f' target - "{self.target}".')
 
         self.replace_cholesterol_zeros()
+
 
     def replace_cholesterol_zeros(self):
         n_zeros = (self.df['Cholesterol'] == 0).sum()

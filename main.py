@@ -63,7 +63,7 @@ def run_preprocessing(PreprocessorClass: Type[BasePreprocessor],
         processed_dir : Path, optional
             Directory where the processed data will be stored (default is 'data/processed')
         logger : logging.Logger
-            Logger instance for the module
+            Logger instance for logging messages and saving logs
     """
 
     try:
