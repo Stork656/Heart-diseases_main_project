@@ -54,5 +54,5 @@ class DataLoader:
 
         # Loading data
         self.df = pd.read_csv(self.path)
-        self.logger.info(f"DataFrame is loaded. \nShape: {self.df.shape}\n")
+        self.logger.info(f"DataFrame is loaded \nShape: {self.df.shape}\n")
         return self.df

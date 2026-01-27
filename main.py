@@ -48,8 +48,8 @@ def setup_logging(path: Path = Path('configs/logging.yaml')) -> logging.Logger:
 def run_preprocessing(PreprocessorClass: Type[BasePreprocessor],
                       df: pd.DataFrame,
                       file_name: str,
-                      processed_dir: Path=Path('data/processed'),
-                      logger: logging.Logger):
+                      logger: logging.Logger,
+                      processed_dir: Path=Path('data/processed')):
     """
     Executes the data preprocessing pipeline using the specified preprocessor
 
@@ -72,8 +72,8 @@ def run_preprocessing(PreprocessorClass: Type[BasePreprocessor],
         preprocessor = PreprocessorClass(df)
         preprocessor.run()
         preprocessor.df.to_csv(processed_dir / file_name, index=False)
-        logger.info(f'Processed file "{file_name}" saved to "{processed_dir}".\n'
-                        f'{PreprocessorClass.__name__} finished successfully.\n')
+        logger.info(f'Processed file "{file_name}" saved to "{processed_dir}"\n'
+                        f'{PreprocessorClass.__name__} finished successfully\n')
     except Exception as e:
         logger.error(f'{PreprocessorClass.__name__} failed with an error: \n{e}')
 
@@ -115,11 +115,11 @@ def main():
         y_train = pd.read_csv(split_dir / f'{name}_y_train.csv').squeeze()
         y_test = pd.read_csv(split_dir / f'{name}_y_test.csv').squeeze()
 
-        logger.info(f'Start train {name} pipeline.')
+        logger.info(f'Start train {name} pipeline')
         models = Models(X_train, y_train, preprocessing_type=name)
         models.train_models()
 
-        logger.info(f'Start evaluate {name} pipeline.')
+        logger.info(f'Start evaluate {name} pipeline')
         ev = Evaluate(X_test, y_test, preprocessing_type=name)
         ev.evaluate()
 
