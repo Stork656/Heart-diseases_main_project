@@ -18,19 +18,15 @@ def setup_logging(path: Path = Path("configs/logging.yaml")) -> logging.Logger:
     """
     Initializes logging configuration from a YAML file
     Should be called once
-
     Parameters:
         path : Path, optional
             Path to the logging YAML file (default is 'configs/logging.yaml')
-
     Raises:
         FileNotFoundError: If the YAML file does not exist
-
     Returns:
         logging.Logger
             Logger instance configured according to the YAML file
     """
-
     # File exist check
     if not path.is_file():
         raise FileNotFoundError(f"File {path} not found")
@@ -52,7 +48,6 @@ def run_preprocessing(PreprocessorClass: Type[BasePreprocessor],
                       processed_dir: Path=Path("data/processed")):
     """
     Executes the data preprocessing pipeline using the specified preprocessor
-
     Parameters:
         PreprocessorClass : Type[BasePreprocessor]
             Preprocessor class to use
@@ -65,7 +60,6 @@ def run_preprocessing(PreprocessorClass: Type[BasePreprocessor],
         logger : logging.Logger
             Logger instance for logging messages and saving logs
     """
-
     try:
         # Launching the pipeline preprocessing data
         logger.info(f"{PreprocessorClass.__name__} is starting")
@@ -82,7 +76,6 @@ def main():
     """
     Performs data preprocessing, trains machine learning models, and evaluates their performance
     """
-
     # Component initialization
     logger = setup_logging()
     loader = DataLoader()
