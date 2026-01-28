@@ -33,7 +33,7 @@ class BasePreprocessor:
         binary_cols : List or None
             List with binary feature names
     """
-    def __init__(self, df: pd.DataFrame, target: str = "HeartDisease"):
+    def __init__(self, df: pd.DataFrame, target: str = "HeartDisease") -> None:
         """
         Initializes BasePreprocessor
         Parameters:

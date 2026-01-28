@@ -4,25 +4,29 @@ import pandas as pd
 
 class SimplePreprocessor(BasePreprocessor):
     """
-    Child class of the base class
-    Performs a simple data processing pipeline and contains minimal processing steps:
-    - Rows with missing values are removed
-    - Outliers are filtered using a predefined threshold
-    - No feature scaling
-    - One-Hot Encoding using Pandas
+    SimplePreprocessor is a subclass of BasePreprocessor
+    Performs a minimal preprocessing pipeline:
+    - Removes rows with missing values
+    - Filters outliers using predefined thresholds
+    - Does not perform feature scaling
+    - Applies one-hot encoding using pandas
     """
-    def __init__(self, df: pd.DataFrame, target: str = 'HeartDisease'):
+    def __init__(self, df: pd.DataFrame, target: str = 'HeartDisease') -> None:
         """
-
+        Initializes SimplePreprocessor
+        Parameters:
+            df : pd.DataFrame
+                Input DataFrame to preprocess from parent class
+            target : str, optional
+                Target column name from parent class (default is 'HeartDisease')
         """
         super().__init__(df, target)
 
 
     def remove_missing(self) -> None:
         """
-        Deletes a row if it finds missing values
+        Removes rows with missing values
         """
-
         if super().remove_missing():
             self.df.dropna(inplace = True)
             self.logger.info(f'Rows with missing values deleted')
@@ -30,10 +34,7 @@ class SimplePreprocessor(BasePreprocessor):
 
     def remove_outliers(self) -> None:
         """
-        Deletes unrealistic values
-        EDA showed:
-        - Cholesterol
-        - RestingBP
+        Filters outliers using predefined thresholds (see EDA)
         """
         if self.validator.check_column_exist(self.df, ['RestingBP']):
             self.df = self.df.loc[(self.df['RestingBP'] >= 50)]
@@ -43,24 +44,21 @@ class SimplePreprocessor(BasePreprocessor):
         """
         There is no scaling in a simple pipeline
         """
-
         pass
 
 
-    def encoding(self):
+    def encoding(self) -> None:
         """
-        Encoding of categorical and binary-categorical values
+        Applies one-hot encoding using pandas for categorical and binary features
         """
-
         columns_to_encode = self.categorical_cols + self.binary_cols
         self.df = pd.get_dummies(self.df, columns=columns_to_encode)
 
 
-    def run(self):
+    def run(self) -> None:
         """
         Run full simple preprocessing pipeline
         """
-
         self.logger.info(f'Running simple preprocessor')
         self.remove_duplicates()
         self.remove_missing()

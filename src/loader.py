@@ -18,7 +18,7 @@ class DataLoader:
         df : pd.DataFrame or None
             Loaded DataFrame (None until loaded)
     """
-    def __init__(self, path: Path = Path("data/raw/heart-diseases.csv")):
+    def __init__(self, path: Path = Path("data/raw/heart-diseases.csv")) -> None:
         """
         Initializes DataLoader
         Parameters:
