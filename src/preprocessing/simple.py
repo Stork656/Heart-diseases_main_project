@@ -4,11 +4,17 @@ import pandas as pd
 
 class SimplePreprocessor(BasePreprocessor):
     """
-
+    Child class of the base class
+    Performs a simple data processing pipeline and contains minimal processing steps:
+    - Rows with missing values are removed
+    - Outliers are filtered using a predefined threshold
+    - No feature scaling
+    - One-Hot Encoding using Pandas
     """
-
-
     def __init__(self, df: pd.DataFrame, target: str = 'HeartDisease'):
+        """
+
+        """
         super().__init__(df, target)
 
 

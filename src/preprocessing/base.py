@@ -15,8 +15,33 @@ class BasePreprocessor:
     - Converts missing values encoded as zeros in the 'Cholesterol' column to NaN
     - Classifies features by type (numeric, categorical, binary)
     - Removes duplicate rows and checks for missing values
+    Attributes:
+        validator : Validator
+            Validator instance for validating input data
+        logger : Logger
+            Logger instance for logging messages and saving logs
+        df : pd.DataFrame
+            Copy of input DataFrame to preprocess
+        target : str
+            Target column name
+        feature_types : dict or None
+            Dict with list of feature names as values and types as keys
+        numeric_cols : List or None
+            List with numeric feature names
+        categorical_cols : List or None
+            List with categorical feature names
+        binary_cols : List or None
+            List with binary feature names
     """
     def __init__(self, df: pd.DataFrame, target: str = "HeartDisease"):
+        """
+        Initializes BasePreprocessor
+        Parameters:
+            df : pd.DataFrame
+                Input DataFrame to preprocess. A copy will be stored
+            target : str, optional
+                Target column name (default is 'HeartDisease')
+        """
         # Component initialization
         self.validator = Validator()
         self.logger: Logger = get_logger()

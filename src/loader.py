@@ -7,7 +7,7 @@ from pathlib import Path
 
 class DataLoader:
     """
-    Loads dataset from a CSV file.
+    Loads dataset from a CSV file
     Attributes:
         logger : Logger
             Logger instance for logging messages and saving logs
@@ -20,7 +20,7 @@ class DataLoader:
     """
     def __init__(self, path: Path = Path("data/raw/heart-diseases.csv")):
         """
-        Initializes DataLoader.
+        Initializes DataLoader
         Parameters:
             path : Path, optional
                 Path to the CSV file (default "data/raw/heart-diseases.csv")
@@ -38,7 +38,7 @@ class DataLoader:
 
     def load(self) -> pd.DataFrame:
         """
-        Load CSV file into pandas DataFrame.
+        Load CSV file into pandas DataFrame
         Returns:
             pd.DataFrame
                 Loaded DataFrame
