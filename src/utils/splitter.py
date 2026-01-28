@@ -8,7 +8,6 @@ from sklearn.model_selection import train_test_split
 def splitter(file_path: Path, name: str, target: str = "HeartDisease") -> None:
     """
     Splits data into training and test sets and saves the splits
-
     Parameters:
         file_path : Path
             Path to the preprocessed data file
@@ -17,7 +16,6 @@ def splitter(file_path: Path, name: str, target: str = "HeartDisease") -> None:
         target : str, optional
             Name of the target variable (default is "HeartDisease")
     """
-
     # Component initialization
     logger = get_logger()
     validator = Validator()
@@ -32,7 +30,7 @@ def splitter(file_path: Path, name: str, target: str = "HeartDisease") -> None:
     validator.check_df_type(df)
     validator.check_target(target, df)
 
-    # Start splitting and saving data
+    # Splitting data
     X = df.drop(columns=[target])
     y = df[target]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
@@ -41,9 +39,9 @@ def splitter(file_path: Path, name: str, target: str = "HeartDisease") -> None:
                 f"\ntrain_target: {y_train.shape},"
                 f"\ntest_target: {y_test.shape}")
 
+    # Saving data
     save_dir: Path = Path("data/splits")
     save_dir.mkdir(parents=True, exist_ok=True)
-
     X_train.to_csv(save_dir / f"{name}_X_train.csv", index=False)
     X_test.to_csv(save_dir / f"{name}_X_test.csv", index=False)
     y_train.to_csv(save_dir / f"{name}_y_train.csv", index=False)
