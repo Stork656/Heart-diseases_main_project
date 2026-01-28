@@ -120,7 +120,7 @@ class BasePreprocessor:
             self.df = self.df.drop_duplicates()
 
 
-    def remove_missing(self) -> bool:
+    def check_missing(self) -> bool:
         """
         Checks for missing values in the DataFrame
         """
