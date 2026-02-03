@@ -40,6 +40,10 @@ class Models:
             Dictionary of models module and class
         params: dict or None
             Dictionary of model parameters
+        trained_models : dict
+            Dictionary of trained models
+        results : dict
+            Dictionary of results from grid search
     """
     def __init__(self,
                  X_train: pd.DataFrame,
@@ -71,7 +75,6 @@ class Models:
         self.params: dict | None = None
         self.trained_models: dict | None = None
         self.results: dict | None = None
-
 
         # Validate the configuration path
         self.validator.check_type_path(config_path)
@@ -105,10 +108,11 @@ class Models:
         cls = getattr(module, class_name)
         return cls
 
-
     def load_models(self) -> None:
         """
-        Creates dictionaries for models and their parameters
+        Initializes the 'models' and 'params' dictionaries.
+        Each model class is loaded and an instance is created.
+        Parameters for each model are stored separately.
         """
         self.models = {}
         self.params = {}
@@ -121,7 +125,9 @@ class Models:
 
     def train_models(self) -> None:
         """
-
+        Trains all models using GridSearchCV.
+        Special handling is applied for LogisticRegression
+        due to constraints with l1_ratio and solver compatibility
         """
         self.trained_models = {}
         self.results = {}
@@ -130,6 +136,7 @@ class Models:
             self.logger.info(f'Training {name} model')
             base_params = self.params[name]
 
+            # Separate processing for Logistic regression
             if name == 'LR':
                 params = [
                 {
@@ -144,6 +151,7 @@ class Models:
                 },
                 {
                     'solver': ['saga'],
+                    'penalty': ['elasticnet'],
                     'l1_ratio': base_params['l1_ratio'],
                     'C': base_params['C'],
                     'max_iter': base_params['max_iter']
@@ -152,6 +160,7 @@ class Models:
             else:
                 params = base_params
 
+            # Tuning
             gs = GridSearchCV(
                 estimator=model,
                 param_grid=params,
@@ -161,6 +170,7 @@ class Models:
             )
             gs.fit(self.X_train, self.y_train)
 
+            # Saving parameters and score
             self.trained_models[name] = gs.best_estimator_
             self.results[name] = {
                 'best_params': gs.best_params_,
@@ -168,6 +178,7 @@ class Models:
             }
             self.logger.info(f'{name} best params: {gs.best_params_}, best CV score: {gs.best_score_:.4f}')
 
+        # Saving models
         for name, model in self.trained_models.items():
             file_path = self.save_path / f'{name}.joblib'
             joblib.dump(model, file_path)
