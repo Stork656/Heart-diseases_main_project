@@ -40,16 +40,22 @@ class AdvancedPreprocessor(BasePreprocessor):
         """
         Missing values are imputed using KNNImputer
         (number of neighbors = 5)
+        Rows with missing values in the target column are dropped
         """
+        # Drop missing values in the target column
         self.df = self.df.dropna(subset=[self.target])
 
+        # Impute missing values in the DataFrame
         if super().check_missing():
+            features = self.df.drop(columns=[self.target])
             imputer = KNNImputer(n_neighbors=5)
-            self.df.loc[:, :] = pd.DataFrame(
-                imputer.fit_transform(self.df),
-                columns = self.df.columns,
-                index = self.df.index
+            features_imputed = pd.DataFrame(
+                imputer.fit_transform(features),
+                columns = features.columns,
+                index = features.index
             )
+
+            self.df[features.columns] = features_imputed
 
 
     def scaling(self) -> None:
@@ -64,14 +70,14 @@ class AdvancedPreprocessor(BasePreprocessor):
         """
         Filters outliers using IsolationForest
         """
-        iso = IsolationForest(contamination='auto', random_state=42)
+        iso = IsolationForest(contamination=0.05, random_state=42)
         mask = iso.fit_predict(self.df[self.numeric_cols])
-        self.df = self.df[mask == 1]
+        self.df = self.df[mask == 1].reset_index(drop=True)
 
 
     def run(self) -> None:
         """
-        Run full advanсed preprocessing pipeline
+        Run full advanced preprocessing pipeline
         """
 
         self.remove_duplicates()

@@ -51,7 +51,7 @@ class StandardPreprocessor(BasePreprocessor):
             margin = (q3 - q1) * 1.5
             # Comparing the Series of each numeric feature
             mask &= (self.df[feature] >= q1 - margin) & (self.df[feature] <= q3 + margin)
-        self.df = self.df.loc[mask]
+        self.df = self.df.loc[mask].reset_index(drop=True)
 
 
     def encoding(self) -> None:

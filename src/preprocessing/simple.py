@@ -29,6 +29,7 @@ class SimplePreprocessor(BasePreprocessor):
         """
         if super().check_missing():
             self.df.dropna(inplace = True)
+            self.df.reset_index(drop = True)
             self.logger.info(f'Rows with missing values deleted')
 
 
@@ -37,7 +38,7 @@ class SimplePreprocessor(BasePreprocessor):
         Filters outliers using predefined thresholds (see EDA)
         """
         if self.validator.check_column_exist(self.df, ['RestingBP']):
-            self.df = self.df.loc[(self.df['RestingBP'] >= 50)]
+            self.df = self.df.loc[(self.df['RestingBP'] >= 50)].reset_index(drop = True)
 
 
     def scaling(self) -> None:
