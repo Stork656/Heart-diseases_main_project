@@ -45,7 +45,7 @@ class Models:
                  X_train: pd.DataFrame,
                  y_train: pd.Series,
                  preprocessing_type: str,
-                 config_path: Path = Path('configs/models.yaml')):
+                 config_path: Path = Path('configs/models.yaml')) -> None:
         """
         Initialize the Models class
         Parameters:
@@ -69,6 +69,8 @@ class Models:
         self.config_path: Path = config_path.resolve()
         self.models: dict | None = None
         self.params: dict | None = None
+        self.trained_models: dict | None = None
+        self.results: dict | None = None
 
 
         # Validate the configuration path
@@ -87,13 +89,16 @@ class Models:
         self.save_path.mkdir(parents=True, exist_ok=True)
 
 
-    def get_class_from_string(self, class_path: str):
+    def get_class_from_string(self, class_path: str) -> type:
         """
         Loads the module and the class of the model used
         Parameters:
             class_path : str
                 Full path to the class, including module and class name
                 (Example: 'sklearn.linear_model.LogisticRegression')
+        Returns:
+            type
+                The class of the model
         """
         module_name, class_name = class_path.rsplit('.', 1)
         module = importlib.import_module(module_name)
@@ -101,9 +106,9 @@ class Models:
         return cls
 
 
-    def load_models(self):
+    def load_models(self) -> None:
         """
-
+        Creates dictionaries for models and their parameters
         """
         self.models = {}
         self.params = {}
@@ -114,13 +119,12 @@ class Models:
             self.params[name] = info.get('params', {})
 
 
-    def train_models(self):
+    def train_models(self) -> None:
         """
 
         """
         self.trained_models = {}
         self.results = {}
-
 
         for name, model in self.models.items():
             self.logger.info(f'Training {name} model')
@@ -148,7 +152,6 @@ class Models:
             else:
                 params = base_params
 
-
             gs = GridSearchCV(
                 estimator=model,
                 param_grid=params,
@@ -156,7 +159,6 @@ class Models:
                 scoring=self.config['gridsearch']['scoring'],
                 n_jobs=self.config['gridsearch']['n_jobs']
             )
-
             gs.fit(self.X_train, self.y_train)
 
             self.trained_models[name] = gs.best_estimator_
@@ -164,9 +166,7 @@ class Models:
                 'best_params': gs.best_params_,
                 'best_score': gs.best_score_
             }
-
             self.logger.info(f'{name} best params: {gs.best_params_}, best CV score: {gs.best_score_:.4f}')
-
 
         for name, model in self.trained_models.items():
             file_path = self.save_path / f'{name}.joblib'
