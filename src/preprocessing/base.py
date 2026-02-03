@@ -5,6 +5,7 @@ from logging import Logger
 from src.utils.logger import get_logger
 from src.utils.validator import Validator
 
+
 class BasePreprocessor:
     """
     The parent class for 3 data processing pipelines:
@@ -35,7 +36,7 @@ class BasePreprocessor:
     """
     def __init__(self, df: pd.DataFrame, target: str = "HeartDisease") -> None:
         """
-        Initializes BasePreprocessor
+        Initialize the BasePreprocessor class
         Parameters:
             df : pd.DataFrame
                 Input DataFrame to preprocess. A copy will be stored

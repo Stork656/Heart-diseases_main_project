@@ -1,3 +1,5 @@
+import logging
+
 import pandas as pd
 from src.utils.logger import get_logger
 from sklearn.model_selection import GridSearchCV
@@ -9,45 +11,97 @@ import joblib
 
 
 class Models:
+    """
+    A class for training models:
+    - LogisticRegression
+    - svm.SVC
+    - KNeighborsClassifier
+    - RandomForestClassifier
+    - GradientBoostingClassifier
+    - AdaBoostClassifier
+    Hyperparameters are tuned using GridSearchCV
+    Model and GridSearch configuration are defined in 'configs/models.yaml'
+    Attributes:
+        validator : Validator
+            Validator instance for validating input data
+        logger : Logger
+            Logger instance for logging messages and saving logs
+        X_train : pd.DataFrame
+            Training data
+        y_train : pd.Series
+            Training labels
+        preprocessing_type : str
+            Type of preprocessing used
+        config_path : Path
+            Path to the models YAML file (default is 'configs/models.yaml')
+        save_path : Path
+            Path to save trained models
+        models : dict or None
+            Dictionary of models module and class
+        params: dict or None
+            Dictionary of model parameters
+    """
     def __init__(self,
                  X_train: pd.DataFrame,
                  y_train: pd.Series,
                  preprocessing_type: str,
                  config_path: Path = Path('configs/models.yaml')):
         """
-
+        Initialize the Models class
+        Parameters:
+            X_train : pd.DataFrame
+                Training data
+            y_train : pd.Series
+                Training labels
+            preprocessing_type : str
+                Type of preprocessing used
+            config_path : Path
+                Path to the models YAML file (default is 'configs/models.yaml')
         """
+        # Component initialization
         self.validator = Validator()
-        self.logger = get_logger()
+        self.logger: logging.Logger = get_logger()
 
-        self.X_train = X_train
-        self.y_train = y_train
+        # initializing variables
+        self.X_train: pd.DataFrame = X_train
+        self.y_train: pd.Series = y_train
+        self.preprocessing_type: str = preprocessing_type
+        self.config_path: Path = config_path.resolve()
+        self.models: dict | None = None
+        self.params: dict | None = None
 
-        self.preprocessing_type = preprocessing_type
 
-        self.config_path = config_path.resolve()
+        # Validate the configuration path
         self.validator.check_type_path(config_path)
         self.validator.check_file_exists(config_path)
 
+        # Load configuration from YAML file
         with open(config_path, 'r', encoding='utf-8') as f:
             self.config = yaml.safe_load(f)
 
-        self._load_models()
+        # Calling a method for loading models
+        self.load_models()
 
+        # Set path to save trained models
         self.save_path = Path('models') / self.preprocessing_type
         self.save_path.mkdir(parents=True, exist_ok=True)
 
 
-    def _get_class_from_string(self, class_path: str):
+    def get_class_from_string(self, class_path: str):
         """
-
+        Loads the module and the class of the model used
+        Parameters:
+            class_path : str
+                Full path to the class, including module and class name
+                (Example: 'sklearn.linear_model.LogisticRegression')
         """
         module_name, class_name = class_path.rsplit('.', 1)
         module = importlib.import_module(module_name)
         cls = getattr(module, class_name)
         return cls
 
-    def _load_models(self):
+
+    def load_models(self):
         """
 
         """
@@ -55,7 +109,7 @@ class Models:
         self.params = {}
 
         for name, info in self.config['models'].items():
-            cls = self._get_class_from_string(info['class'])
+            cls = self.get_class_from_string(info['class'])
             self.models[name] = cls()
             self.params[name] = info.get('params', {})
 

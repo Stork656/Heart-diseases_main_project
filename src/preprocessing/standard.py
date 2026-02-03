@@ -3,6 +3,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
 
+
 class StandardPreprocessor(BasePreprocessor):
     """
     StandardPreprocessor is a subclass of BasePreprocessor
