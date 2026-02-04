@@ -152,7 +152,6 @@ class Models:
                 },
                 {
                     "solver": ["saga"],
-                    "penalty": ["elasticnet"],
                     "l1_ratio": base_params["l1_ratio"],
                     "C": base_params["C"],
                     "max_iter": base_params["max_iter"]
