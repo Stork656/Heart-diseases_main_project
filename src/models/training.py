@@ -1,5 +1,4 @@
 import logging
-
 import pandas as pd
 from src.utils.logger import get_logger
 from sklearn.model_selection import GridSearchCV
@@ -12,7 +11,7 @@ import joblib
 
 class Models:
     """
-    A class for training models:
+    A class to training models:
     - LogisticRegression
     - svm.SVC
     - KNeighborsClassifier
@@ -32,6 +31,8 @@ class Models:
             Training labels
         preprocessing_type : str
             Type of preprocessing used
+        config : dict
+            Dictionary of configuration parameters
         config_path : Path
             Path to the models YAML file (default is 'configs/models.yaml')
         save_path : Path
@@ -49,7 +50,7 @@ class Models:
                  X_train: pd.DataFrame,
                  y_train: pd.Series,
                  preprocessing_type: str,
-                 config_path: Path = Path('configs/models.yaml')) -> None:
+                 config_path: Path = Path("configs/models.yaml")) -> None:
         """
         Initialize the Models class
         Parameters:
@@ -81,14 +82,14 @@ class Models:
         self.validator.check_file_exists(config_path)
 
         # Load configuration from YAML file
-        with open(config_path, 'r', encoding='utf-8') as f:
+        with open(config_path, "r", encoding="utf-8") as f:
             self.config = yaml.safe_load(f)
 
         # Calling a method for loading models
         self.load_models()
 
         # Set path to save trained models
-        self.save_path = Path('models') / self.preprocessing_type
+        self.save_path = Path("models") / self.preprocessing_type
         self.save_path.mkdir(parents=True, exist_ok=True)
 
 
@@ -103,7 +104,7 @@ class Models:
             type
                 The class of the model
         """
-        module_name, class_name = class_path.rsplit('.', 1)
+        module_name, class_name = class_path.rsplit(".", 1)
         module = importlib.import_module(module_name)
         cls = getattr(module, class_name)
         return cls
@@ -117,10 +118,10 @@ class Models:
         self.models = {}
         self.params = {}
 
-        for name, info in self.config['models'].items():
-            cls = self.get_class_from_string(info['class'])
+        for name, info in self.config["models"].items():
+            cls = self.get_class_from_string(info["class"])
             self.models[name] = cls()
-            self.params[name] = info.get('params', {})
+            self.params[name] = info.get("params", {})
 
 
     def train_models(self) -> None:
@@ -133,28 +134,28 @@ class Models:
         self.results = {}
 
         for name, model in self.models.items():
-            self.logger.info(f'Training {name} model')
+            self.logger.info(f"Training {name} model")
             base_params = self.params[name]
 
             # Separate processing for Logistic regression
-            if name == 'LR':
+            if name == "LR":
                 params = [
                 {
-                    'solver': ['lbfgs', 'liblinear'],
-                    'C': base_params['C'],
-                    'max_iter': base_params['max_iter']
+                    "solver": ["lbfgs", "liblinear"],
+                    "C": base_params["C"],
+                    "max_iter": base_params["max_iter"]
                 },
                 {
-                    'solver': ['liblinear', 'saga'],
-                    'C': base_params['C'],
-                    'max_iter': base_params['max_iter']
+                    "solver": ["liblinear", "saga"],
+                    "C": base_params["C"],
+                    "max_iter": base_params["max_iter"]
                 },
                 {
-                    'solver': ['saga'],
-                    'penalty': ['elasticnet'],
-                    'l1_ratio': base_params['l1_ratio'],
-                    'C': base_params['C'],
-                    'max_iter': base_params['max_iter']
+                    "solver": ["saga"],
+                    "penalty": ["elasticnet"],
+                    "l1_ratio": base_params["l1_ratio"],
+                    "C": base_params["C"],
+                    "max_iter": base_params["max_iter"]
                 }
             ]
             else:
@@ -164,22 +165,22 @@ class Models:
             gs = GridSearchCV(
                 estimator=model,
                 param_grid=params,
-                cv=self.config['gridsearch']['cv'],
-                scoring=self.config['gridsearch']['scoring'],
-                n_jobs=self.config['gridsearch']['n_jobs']
+                cv=self.config["gridsearch"]["cv"],
+                scoring=self.config["gridsearch"]["scoring"],
+                n_jobs=self.config["gridsearch"]["n_jobs"]
             )
             gs.fit(self.X_train, self.y_train)
 
             # Saving parameters and score
             self.trained_models[name] = gs.best_estimator_
             self.results[name] = {
-                'best_params': gs.best_params_,
-                'best_score': gs.best_score_
+                "best_params": gs.best_params_,
+                "best_score": gs.best_score_
             }
-            self.logger.info(f'{name} best params: {gs.best_params_}, best CV score: {gs.best_score_:.4f}')
+            self.logger.info(f"{name} best params: {gs.best_params_}, best CV score: {gs.best_score_:.4f}")
 
         # Saving models
         for name, model in self.trained_models.items():
-            file_path = self.save_path / f'{name}.joblib'
+            file_path = self.save_path / f"{name}.joblib"
             joblib.dump(model, file_path)
-            self.logger.info(f'Saving model {model} at {file_path}')
+            self.logger.info(f"Saving model {model} at {file_path}")
