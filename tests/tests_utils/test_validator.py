@@ -99,7 +99,8 @@ def test_check_target_negative(data_test) -> None:
 def test_split_features_positive(data_test) -> None:
     """
     Checks that the validator's check_split_features method
-    accepts correctly split features without raising an error
+    confirms all feature type lists are not empty in the preprocessor
+    It does not validate correctness of assignment, only presence
     Parameters:
         data_test : pd.DataFrame
             Test DataFrame provided by a fixture
@@ -110,8 +111,10 @@ def test_split_features_positive(data_test) -> None:
 
 def test_split_features_negative(data_test) -> None:
     """
-    Checks that the validator's check_split_features method raises a ValueError
-    when features are incorrectly split or required features are missing
+    Checks that the validator's check_split_features method
+    raises a ValueError when required features are missing.
+    BasePreprocessor is used to split features,
+    but the test is for the validator's error detection
     """
     data_test = data_test.copy()
     data_test.pop('ExerciseAngina')
@@ -135,8 +138,9 @@ def test_split_features_real_data(real_data) -> None:
 
 def test_check_duplicates_positive(data_test) -> None:
     """
-    Checks that the validator's check_duplicates method
-    correctly detects duplicate rows
+    Checks that the validator's check_split_features method
+    accepts correctly split features without raising an error
+    on real data
     Parameters:
         data_test : pd.DataFrame
             Test DataFrame provided by a fixture

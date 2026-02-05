@@ -1,40 +1,33 @@
 import pytest
-import pandas as pd
 from src.preprocessing.base import BasePreprocessor
-from src.loader import DataLoader
-from src.utils.validator import Validator
-
-#Fixtures
-@pytest.fixture
-def expected():
-    expected = {
-        'target': ['HeartDisease'],
-        'binary': ['ExerciseAngina'],
-        'numeric': ['age', 'Cholesterol', 'RestingBP'],
-        'categorical': ['ChestPainType'],
-    }
-    return expected
 
 
-@pytest.fixture
-def expected_types():
-    expected_types = {
-        'target': ['HeartDisease'],
-        'binary': ['Sex', 'FastingBS', 'ExerciseAngina'],
-        'numeric': ['Age', 'RestingBP', 'Cholesterol', 'MaxHR',  'Oldpeak'],
-        'categorical': ['ChestPainType', 'RestingECG', 'ST_Slope']}
-    return expected_types
-
-
-#Tests
-def test_split_feature_types_binary_str(data_test, expected) :
+def test_split_feature_types_binary_str(data_test, expected) -> None:
+    """
+    Checks that binary features represented as strings are correctly identified
+    and that all feature types match the expected distribution in the test data
+    Parameters:
+        data_test : pd.DataFrame
+            Test DataFrame provided by a fixture
+        expected : dict
+            Expected feature type distribution
+    """
     df = data_test.copy()
     bp = BasePreprocessor(df, target='HeartDisease')
     feature_types = bp.split_feature_types()
     assert feature_types == expected
 
 
-def test_split_feature_types_binary_num(data_test, expected):
+def test_split_feature_types_binary_num(data_test, expected) -> None:
+    """
+    Checks that binary features represented as numeric (0/1) are correctly identified
+    and that all feature types match the expected distribution in the test data
+    Parameters:
+        data_test : pd.DataFrame
+            Test DataFrame provided by a fixture
+        expected : dict
+            Expected feature type distribution
+    """
     df = data_test.copy()
     df['ExerciseAngina'] = [1, 0, 0, 1, 0]
     bp = BasePreprocessor(df, target='HeartDisease')
@@ -42,7 +35,16 @@ def test_split_feature_types_binary_num(data_test, expected):
     assert feature_types == expected
 
 
-def test_split_feature_types_binary_bool(data_test, expected):
+def test_split_feature_types_binary_bool(data_test, expected) -> None:
+    """
+    Checks that binary features represented as boolean (True/False) are correctly identified
+    and that all feature types match the expected distribution in the test data
+    Parameters:
+        data_test : pd.DataFrame
+            Test DataFrame provided by a fixture
+        expected : dict
+            Expected feature type distribution
+    """
     df = data_test.copy()
     df['ExerciseAngina'] = [True, False, False, True, False]
     bp = BasePreprocessor(df, target='HeartDisease')
@@ -50,7 +52,15 @@ def test_split_feature_types_binary_bool(data_test, expected):
     assert feature_types == expected
 
 
-def test_split_features_types_real_data(real_data, expected_types):
+def test_split_features_types_real_data(real_data, expected_types) -> None:
+    """
+    Checks that all feature types in the real dataset match the expected distribution
+    Parameters:
+        real_data : pd.DataFrame
+            Real DataFrame provided by a fixture
+        expected_types : dict
+            Expected feature type distribution in the real data
+    """
     df = real_data.copy()
     bp = BasePreprocessor(df, target='HeartDisease')
     feature_types = bp.split_feature_types()
@@ -58,7 +68,13 @@ def test_split_features_types_real_data(real_data, expected_types):
         assert all(value in feature_types[key] for value in values)
 
 
-def test_remove_duplicates_positive(data_test):
+def test_remove_duplicates_positive(data_test) -> None:
+    """
+    Checks that all duplicate rows are removed from the test data
+    Parameters:
+        data_test : pd.DataFrame
+            Test DataFrame provided by a fixture
+    """
     df = data_test.copy()
     bp = BasePreprocessor(df, target='HeartDisease')
     before = len(bp.df)
@@ -67,7 +83,13 @@ def test_remove_duplicates_positive(data_test):
     assert after < before
 
 
-def test_remove_duplicates_negative(data_test):
+def test_remove_duplicates_negative(data_test) -> None:
+    """
+    Checks that no rows are removed from the test data if there are no duplicates
+    Parameters:
+        data_test : pd.DataFrame
+            Test DataFrame provided by a fixture
+    """
     df = data_test.copy()
     df = df.drop_duplicates()
     bp = BasePreprocessor(df, target='HeartDisease')
@@ -77,7 +99,13 @@ def test_remove_duplicates_negative(data_test):
     assert after == before
 
 
-def test_remove_duplicates_real_data(real_data):
+def test_remove_duplicates_real_data(real_data) -> None:
+    """
+    Checks that no rows are removed from the real data
+    Parameters:
+        real_data : pd.DataFrame
+            Real DataFrame provided by a fixture
+    """
     df = real_data.copy()
     bp = BasePreprocessor(df, target='HeartDisease')
     before = len(bp.df)
@@ -86,20 +114,39 @@ def test_remove_duplicates_real_data(real_data):
     assert after == before
 
 
-def test_remove_missing_negative(data_test):
+def test_check_missing_negative(data_test) -> None:
+    """
+    Checks that method returns False when there are no missing values in the test data
+    Parameters:
+        data_test : pd.DataFrame
+            Test DataFrame provided by a fixture
+    """
     df = data_test.copy()
     bp = BasePreprocessor(df, target='HeartDisease')
-    assert not bp.remove_missing()
+    assert not bp.check_missing()
 
 
-def test_remove_missing_positive(data_test):
+def test_check_missing_positive(data_test) -> None:
+    """
+    Checks that method returns True
+    when missing values are present in the test data
+    Parameters:
+        data_test : pd.DataFrame
+            Test DataFrame provided by a fixture
+    """
     df = data_test.copy()
     df.iloc[0, 0] = None
     bp = BasePreprocessor(df, target='HeartDisease')
-    assert bp.remove_missing()
+    assert bp.check_missing()
 
 
-def test_remove_missing_real_data(real_data):
+def test_check_missing_real_data(real_data) -> None:
+    """
+    Checks that method returns True in the real data
+    Parameters:
+        real_data : pd.DataFrame
+            Real DataFrame provided by a fixture
+    """
     df = real_data.copy()
     bp = BasePreprocessor(df, target='HeartDisease')
-    assert bp.remove_missing()
+    assert bp.check_missing()

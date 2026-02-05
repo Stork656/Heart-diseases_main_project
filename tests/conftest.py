@@ -35,3 +35,28 @@ def real_data() -> pd.DataFrame:
     return df
 
 
+@pytest.fixture
+def expected():
+    """
+    Create dictionary of expected feature groups for test data
+    """
+    expected = {
+        'target': ['HeartDisease'],
+        'binary': ['ExerciseAngina'],
+        'numeric': ['age', 'Cholesterol', 'RestingBP'],
+        'categorical': ['ChestPainType'],
+    }
+    return expected
+
+
+@pytest.fixture
+def expected_types():
+    """
+    Create dictionary of expected feature groups for real data
+    """
+    expected_types = {
+        'target': ['HeartDisease'],
+        'binary': ['Sex', 'FastingBS', 'ExerciseAngina'],
+        'numeric': ['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak'],
+        'categorical': ['ChestPainType', 'RestingECG', 'ST_Slope']}
+    return expected_types
