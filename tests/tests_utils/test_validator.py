@@ -1,53 +1,91 @@
 import pytest
-import numpy as np
-import pathlib
+from pathlib import Path
 from src.utils.validator import Validator
 from src.preprocessing.base import BasePreprocessor
 
 
-
+# Initializing Validator
 validator = Validator()
 
 
-def test_file_path_string_positive():
-    path = 'строка'
+def test_file_path_Path_positive() -> None:
+    """
+    Checks that the validator's check_type_path method
+    correctly accepts a pathlib.Path object without raising an error
+    """
+    path = Path('C:')
     validator.check_type_path(path)
 
 
-def test_file_path_string_negative():
-    path = 123
+def test_file_path_string_negative() -> None:
+    """
+    Checks that the validator's check_type_path method
+    raises a TypeError when a non-path object is passed
+    """
+    path = "C:"
     with pytest.raises(TypeError):
         validator.check_type_path(path)
 
 
-def test_file_exists_positive(tmp_path: pathlib.Path):
+def test_file_exists_positive(tmp_path: Path) -> None:
+    """
+    Checks that the validator's check_file_exists method
+    correctly accepts an existing file without raising an error
+    Parameters:
+        tmp_path : pathlib.Path
+             Temporary directory provided by pytest for creating test files
+    """
     file = tmp_path / 'file.csv'
     file.write_text('a,b,c')
     validator.check_file_exists(file)
 
 
-def test_file_exists_negative(tmp_path: pathlib.Path):
+def test_file_exists_negative(tmp_path: Path) -> None:
+    """
+    Checks that the validator's check_file_exists method
+    raises a FileNotFoundError when a non-existent file is provided
+    Parameters:
+        tmp_path : pathlib.Path
+            Temporary directory provided by pytest for creating test files
+    """
     file = tmp_path / 'no_file.csv'
     with pytest.raises(FileNotFoundError):
         validator.check_file_exists(file)
 
 
-def test_df_type_positive(data_test):
+def test_df_type_positive(data_test) -> None:
+    """
+    Checks that the validator's df_type method
+    correctly accepts a DataFrame object without raising an error
+    Parameters:
+        data_test : pd.DataFrame
+             pd.DataFrame object to test (fixture)
+    """
     validator.check_df_type(data_test)
 
 
-def test_df_type_negative():
+def test_df_type_negative() -> None:
+    """
+    Checks that the validator's df_type method
+    raises a TypeError when a not DataFrame object is provided
+    """
     df = 'пупупу'
     with pytest.raises(TypeError):
         validator.check_df_type(df)
 
 
-def test_check_target_positive(data_test):
+def test_check_target_positive(data_test) -> None:
+    """
+    Test that check_type_path accepts a valid target data
+    """
     target = 'HeartDisease'
     validator.check_target(target, data_test)
 
 
-def test_check_target_negative(data_test):
+def test_check_target_negative(data_test) -> None:
+    """
+    Test that check_type_path accepts an invalid target data
+    """
     target = 'пупупу'
     with pytest.raises(ValueError):
         validator.check_target(target, data_test)

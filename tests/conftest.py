@@ -4,7 +4,14 @@ from src.loader import DataLoader
 
 
 @pytest.fixture
-def data_test():
+def data_test() -> pd.DataFrame:
+    """
+    Create DataFrame for tests
+    It contains features of different types:
+    - numeric (age, Cholesterol, RestingBP)
+    - categorical (ChestPainType)
+    - binary (HeartDisease, ExerciseAngina)
+    """
     df = pd.DataFrame(
         {
             'HeartDisease': [1, 0, 0, 1, 0],
@@ -19,7 +26,10 @@ def data_test():
 
 
 @pytest.fixture
-def real_data():
+def real_data() -> pd.DataFrame:
+    """
+    Load real data for tests
+    """
     loader = DataLoader()
     df = loader.load()
     return df

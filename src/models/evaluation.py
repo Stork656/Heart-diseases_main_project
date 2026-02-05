@@ -17,8 +17,7 @@ class Evaluate:
     - Recall
     - F2
     - ROC-AUC
-    - in EDA PR - curve
-    Metrics configuration are defined in 'configs/metrics.yaml'
+    Metrics configuration is defined in 'configs/metrics.yaml'
     Attributes:
         validator : Validator
             Validator instance for validating input data
@@ -29,7 +28,7 @@ class Evaluate:
         y_test : pd.Series
             Test labels
         preprocessing_type : str
-            Type of preprocessing to used
+            Type of preprocessing used
         config_path : Path
             Path to the metrics YAML file (default is 'configs/metrics.yaml')
         models : dict
@@ -37,8 +36,7 @@ class Evaluate:
         config : dict
             Dictionary of configuration parameters
         metrics : dict
-            Dictionary of metrics to used
-
+            Dictionary of metrics to use
     """
     def __init__(self,
                  X_test: pd.DataFrame,
@@ -53,15 +51,9 @@ class Evaluate:
             y_test : pd.Series
                 Test labels
             preprocessing_type : str
-                Type of preprocessing to used
+                Type of preprocessing used
             config_path : Path
                 Path to the metrics YAML file (default is 'configs/metrics.yaml')
-            config :
-            models_path : Path
-                Path to the models (default is 'models')
-            save_path : Path
-                Path to save results
-
         """
         # Component initialization
         self.validator = Validator()
@@ -73,6 +65,7 @@ class Evaluate:
         self.preprocessing_type = preprocessing_type
         self.config_path = config_path.resolve()
         self.models = {}
+        self.metrics = {}
 
         # Validate the configuration path
         self.validator.check_type_path(config_path)
@@ -113,8 +106,6 @@ class Evaluate:
         """
         Loads metrics and creates a dictionary with settings
         """
-        self.metrics = {}
-
         for metric_name, config in self.config["metrics"].items():
             self.metrics[metric_name] = {
                 "fn": self.get_class_from_string(config["class"]),
@@ -133,18 +124,19 @@ class Evaluate:
 
     def evaluate(self) -> None:
         """
-
+        Evaluates trained models on the test data
+        Computes configured metrics, saves metrics table, predictions and scores (if exists)
         """
         metrics = []
         y_scores = {}
         y_predictions = {}
 
-        # Get predictions on th test
+        # Get predictions on the test
         for model_name, model in self.models.items():
             y_pred = model.predict(self.X_test)
             y_predictions[model_name] = y_pred
 
-            #
+            # Get scores
             if hasattr(model, 'predict_proba'):
                 y_score = model.predict_proba(self.X_test)[:, 1]
             elif hasattr(model, 'decision_function'):
@@ -155,7 +147,7 @@ class Evaluate:
             if y_score is not None:
                 y_scores[model_name] = y_score
 
-
+            # Get metrics
             row = {"model": model_name}
             for metric_name, metric_data in self.metrics.items():
                 metric_fn = metric_data['fn']
@@ -171,15 +163,18 @@ class Evaluate:
 
             metrics.append(row)
 
+        # Save metrics
         df_metrics = pd.DataFrame(metrics)
         file_path = self.save_path / f'{self.preprocessing_type}_metrics.csv'
         df_metrics.to_csv(file_path, index=False)
         self.logger.info(f"Metrics saved to '{file_path}':\n{df_metrics}")
 
+        # Save predictions
         predictions_file = self.save_path / f'{self.preprocessing_type}_y_predict.npy'
         np.save(predictions_file, y_predictions)
         self.logger.info(f"Predictions saved to {predictions_file}")
 
+        # Save scores
         if y_scores:
             scores_file = self.save_path / f'{self.preprocessing_type}_y_scores.npy'
             np.save(scores_file, y_scores)

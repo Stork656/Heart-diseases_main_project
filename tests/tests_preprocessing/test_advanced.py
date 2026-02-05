@@ -6,6 +6,7 @@ from src.preprocessing.advanced import AdvancedPreprocessor
 
 @pytest.mark.parametrize("data", ["data_test", "real_data"])
 def test_encoding(request, data):
+
     df = request.getfixturevalue(data).copy()
     adp = AdvancedPreprocessor(df)
     adp.split_feature_types()
