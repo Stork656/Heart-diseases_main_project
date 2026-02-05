@@ -48,31 +48,31 @@ def test_remove_missing_real_data(real_data: pd.DataFrame) -> None:
     assert not sp.df.isnull().values.any()
 
 
-def test_remove_emissions_positive(data_test: pd.DataFrame) -> None:
+def test_remove_outliers_positive(data_test: pd.DataFrame) -> None:
     df = data_test.copy()
     sp = SimplePreprocessor(df, 'HeartDisease')
     before = len(sp.df)
-    sp.remove_emissions()
+    sp.remove_outliers()
     after = len(sp.df)
     assert before > after
 
 
-def test_remove_emissions_negative(data_test: pd.DataFrame):
+def test_remove_outliers_negative(data_test: pd.DataFrame):
     df = data_test.copy()
     df.loc[1, 'Cholesterol'] = 300
     df.loc[1, 'RestingBP'] = 125
     sp = SimplePreprocessor(df, 'HeartDisease')
     before = len(sp.df)
-    sp.remove_emissions()
+    sp.remove_outliers()
     after = len(sp.df)
     assert before == after
 
 
-def test_remove_emissions_real_data(real_data: pd.DataFrame):
+def test_remove_outliers_real_data(real_data: pd.DataFrame):
     df = real_data.copy()
     sp = SimplePreprocessor(df, 'HeartDisease')
     before = len(sp.df)
-    sp.remove_emissions()
+    sp.remove_outliers()
     after = len(sp.df)
     assert before > after
 
