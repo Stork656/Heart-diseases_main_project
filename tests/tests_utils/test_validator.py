@@ -208,7 +208,11 @@ def test_check_column_exist_negative(data_test) -> None:
 
 def test_check_column_exist_real_data(real_data) -> None:
     """
-
+    Checks that the validator's check_column_exists method
+    correctly detects existing columns in real data
+    Parameters:
+        real_data : pd.DataFrame
+            Real DataFrame provided by a fixture
     """
     columns = ['ExerciseAngina', 'ChestPainType']
     validator.check_column_exist(real_data, columns)
