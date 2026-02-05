@@ -2,6 +2,7 @@ import pytest
 from pathlib import Path
 from src.utils.validator import Validator
 from src.preprocessing.base import BasePreprocessor
+import pandas as pd
 
 
 # Initializing Validator
@@ -53,7 +54,7 @@ def test_file_exists_negative(tmp_path: Path) -> None:
         validator.check_file_exists(file)
 
 
-def test_df_type_positive(data_test) -> None:
+def test_df_type_positive(data_test: pd.DataFrame) -> None:
     """
     Checks that the validator's check_df_type method
     correctly accepts a pandas DataFrame without raising an error
@@ -74,7 +75,7 @@ def test_df_type_negative() -> None:
         validator.check_df_type(df)
 
 
-def test_check_target_positive(data_test) -> None:
+def test_check_target_positive(data_test: pd.DataFrame) -> None:
     """
     Checks that the validator's check_target method
     correctly accepts a valid target column without raising an error
@@ -86,7 +87,7 @@ def test_check_target_positive(data_test) -> None:
     validator.check_target(target, data_test)
 
 
-def test_check_target_negative(data_test) -> None:
+def test_check_target_negative(data_test: pd.DataFrame) -> None:
     """
     Checks that the validator's check_target method
     raises a ValueError when an invalid target column is provided
@@ -96,7 +97,7 @@ def test_check_target_negative(data_test) -> None:
         validator.check_target(target, data_test)
 
 
-def test_split_features_positive(data_test) -> None:
+def test_split_features_positive(data_test: pd.DataFrame) -> None:
     """
     Checks that the validator's check_split_features method
     confirms all feature type lists are not empty in the preprocessor
@@ -109,7 +110,7 @@ def test_split_features_positive(data_test) -> None:
     bp.split_feature_types()
 
 
-def test_split_features_negative(data_test) -> None:
+def test_split_features_negative(data_test: pd.DataFrame) -> None:
     """
     Checks that the validator's check_split_features method
     raises a ValueError when required features are missing.
@@ -123,7 +124,7 @@ def test_split_features_negative(data_test) -> None:
         bp.split_feature_types()
 
 
-def test_split_features_real_data(real_data) -> None:
+def test_split_features_real_data(real_data: pd.DataFrame) -> None:
     """
     Checks that the validator's check_split_features method
     accepts correctly split features in real data without raising an error
@@ -136,7 +137,7 @@ def test_split_features_real_data(real_data) -> None:
     bp.split_feature_types()
 
 
-def test_check_duplicates_positive(data_test) -> None:
+def test_check_duplicates_positive(data_test: pd.DataFrame) -> None:
     """
     Checks that the validator's check_split_features method
     accepts correctly split features without raising an error
@@ -148,7 +149,7 @@ def test_check_duplicates_positive(data_test) -> None:
     assert validator.check_duplicates(data_test)
 
 
-def test_check_duplicates_negative(data_test) -> None:
+def test_check_duplicates_negative(data_test: pd.DataFrame) -> None:
     """
     Checks that the validator's check_duplicates method
     correctly returns False when there are no duplicate rows
@@ -161,7 +162,7 @@ def test_check_duplicates_negative(data_test) -> None:
     assert not validator.check_duplicates(no_duplicates_df)
 
 
-def test_check_missing_negative(data_test) -> None:
+def test_check_missing_negative(data_test: pd.DataFrame) -> None:
     """
     Checks that the validator's check_missing method
     correctly returns False when there are no missing values
@@ -172,7 +173,7 @@ def test_check_missing_negative(data_test) -> None:
     assert not validator.check_missing(data_test)
 
 
-def test_check_missing_positive(data_test) -> None:
+def test_check_missing_positive(data_test: pd.DataFrame) -> None:
     """
     Checks that the validator's check_missing method
     correctly detects missing values
@@ -185,7 +186,7 @@ def test_check_missing_positive(data_test) -> None:
     assert validator.check_missing(df) == True
 
 
-def test_check_column_exist_positive(data_test) -> None:
+def test_check_column_exist_positive(data_test: pd.DataFrame) -> None:
     """
     Checks that the validator's check_column_exists method
     correctly detects existing columns
@@ -197,7 +198,7 @@ def test_check_column_exist_positive(data_test) -> None:
     validator.check_column_exist(data_test, columns)
 
 
-def test_check_column_exist_negative(data_test) -> None:
+def test_check_column_exist_negative(data_test: pd.DataFrame) -> None:
     """
     Checks that the validator's check_column_exists method
     raises a ValueError when an invalid column is provided
@@ -210,7 +211,7 @@ def test_check_column_exist_negative(data_test) -> None:
         validator.check_column_exist(data_test, columns)
 
 
-def test_check_column_exist_real_data(real_data) -> None:
+def test_check_column_exist_real_data(real_data: pd.DataFrame) -> None:
     """
     Checks that the validator's check_column_exists method
     correctly detects existing columns in real data

@@ -1,8 +1,9 @@
 import pytest
 from src.preprocessing.base import BasePreprocessor
+import pandas as pd
 
 
-def test_split_feature_types_binary_str(data_test, expected) -> None:
+def test_split_feature_types_binary_str(data_test: pd.DataFrame, expected: dict) -> None:
     """
     Checks that binary features represented as strings are correctly identified
     and that all feature types match the expected distribution in the test data
@@ -18,7 +19,7 @@ def test_split_feature_types_binary_str(data_test, expected) -> None:
     assert feature_types == expected
 
 
-def test_split_feature_types_binary_num(data_test, expected) -> None:
+def test_split_feature_types_binary_num(data_test: pd.DataFrame, expected: dict) -> None:
     """
     Checks that binary features represented as numeric (0/1) are correctly identified
     and that all feature types match the expected distribution in the test data
@@ -35,7 +36,7 @@ def test_split_feature_types_binary_num(data_test, expected) -> None:
     assert feature_types == expected
 
 
-def test_split_feature_types_binary_bool(data_test, expected) -> None:
+def test_split_feature_types_binary_bool(data_test: pd.DataFrame, expected: dict) -> None:
     """
     Checks that binary features represented as boolean (True/False) are correctly identified
     and that all feature types match the expected distribution in the test data
@@ -52,7 +53,7 @@ def test_split_feature_types_binary_bool(data_test, expected) -> None:
     assert feature_types == expected
 
 
-def test_split_features_types_real_data(real_data, expected_types) -> None:
+def test_split_features_types_real_data(real_data: pd.DataFrame, expected_types: dict) -> None:
     """
     Checks that all feature types in the real dataset match the expected distribution
     Parameters:
@@ -68,7 +69,7 @@ def test_split_features_types_real_data(real_data, expected_types) -> None:
         assert all(value in feature_types[key] for value in values)
 
 
-def test_remove_duplicates_positive(data_test) -> None:
+def test_remove_duplicates_positive(data_test: pd.DataFrame) -> None:
     """
     Checks that all duplicate rows are removed from the test data
     Parameters:
@@ -83,7 +84,7 @@ def test_remove_duplicates_positive(data_test) -> None:
     assert after < before
 
 
-def test_remove_duplicates_negative(data_test) -> None:
+def test_remove_duplicates_negative(data_test: pd.DataFrame) -> None:
     """
     Checks that no rows are removed from the test data if there are no duplicates
     Parameters:
@@ -99,7 +100,7 @@ def test_remove_duplicates_negative(data_test) -> None:
     assert after == before
 
 
-def test_remove_duplicates_real_data(real_data) -> None:
+def test_remove_duplicates_real_data(real_data: pd.DataFrame) -> None:
     """
     Checks that no rows are removed from the real data
     Parameters:
@@ -114,7 +115,7 @@ def test_remove_duplicates_real_data(real_data) -> None:
     assert after == before
 
 
-def test_check_missing_negative(data_test) -> None:
+def test_check_missing_negative(data_test: pd.DataFrame) -> None:
     """
     Checks that method returns False when there are no missing values in the test data
     Parameters:
@@ -126,7 +127,7 @@ def test_check_missing_negative(data_test) -> None:
     assert not bp.check_missing()
 
 
-def test_check_missing_positive(data_test) -> None:
+def test_check_missing_positive(data_test: pd.DataFrame) -> None:
     """
     Checks that method returns True
     when missing values are present in the test data
@@ -140,7 +141,7 @@ def test_check_missing_positive(data_test) -> None:
     assert bp.check_missing()
 
 
-def test_check_missing_real_data(real_data) -> None:
+def test_check_missing_real_data(real_data: pd.DataFrame) -> None:
     """
     Checks that method returns True in the real data
     Parameters:
