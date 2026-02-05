@@ -185,6 +185,9 @@ def test_check_column_exist_positive(data_test) -> None:
     """
     Checks that the validator's check_column_exists method
     correctly detects existing columns
+    Parameters:
+        data_test : pd.DataFrame
+            Test DataFrame provided by a fixture
     """
     columns = ['ExerciseAngina', 'ChestPainType']
     validator.check_column_exist(data_test, columns)
@@ -192,14 +195,21 @@ def test_check_column_exist_positive(data_test) -> None:
 
 def test_check_column_exist_negative(data_test) -> None:
     """
-
+    Checks that the validator's check_column_exists method
+    raises a ValueError when an invalid column is provided
+    Parameters:
+        data_test : pd.DataFrame
+            Test DataFrame provided by a fixture
     """
     columns = ['non-existent column']
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         validator.check_column_exist(data_test, columns)
 
 
-def test_check_column_exist_real_data(real_data):
+def test_check_column_exist_real_data(real_data) -> None:
+    """
+
+    """
     columns = ['ExerciseAngina', 'ChestPainType']
     validator.check_column_exist(real_data, columns)
 
