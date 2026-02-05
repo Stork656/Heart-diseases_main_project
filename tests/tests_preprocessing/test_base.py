@@ -117,7 +117,7 @@ def test_remove_duplicates_real_data(real_data: pd.DataFrame) -> None:
 
 def test_check_missing_negative(data_test: pd.DataFrame) -> None:
     """
-    Checks that method returns False when there are no missing values in the test data
+    Checks that the method returns False when there are no missing values in the test data
     Parameters:
         data_test : pd.DataFrame
             Test DataFrame provided by a fixture
@@ -129,7 +129,7 @@ def test_check_missing_negative(data_test: pd.DataFrame) -> None:
 
 def test_check_missing_positive(data_test: pd.DataFrame) -> None:
     """
-    Checks that method returns True
+    Checks that the method returns True
     when missing values are present in the test data
     Parameters:
         data_test : pd.DataFrame
@@ -143,7 +143,7 @@ def test_check_missing_positive(data_test: pd.DataFrame) -> None:
 
 def test_check_missing_real_data(real_data: pd.DataFrame) -> None:
     """
-    Checks that method returns True in the real data
+    Checks that the method returns True in the real data
     Parameters:
         real_data : pd.DataFrame
             Real DataFrame provided by a fixture

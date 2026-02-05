@@ -5,7 +5,7 @@ from src.preprocessing.simple import SimplePreprocessor
 
 def test_remove_missing_positive(data_test: pd.DataFrame) -> None:
     """
-    Check that method delete row when there are missing values in the test data
+    Check that the method delete row when there are missing values in the test data
     Parameters:
         data_test : pd.DataFrame
             Test DataFrame provided by a fixture
