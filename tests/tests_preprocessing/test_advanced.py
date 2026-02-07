@@ -5,15 +5,20 @@ from src.preprocessing.advanced import AdvancedPreprocessor
 
 
 @pytest.mark.parametrize("data", ["data_test", "real_data"])
-def test_encoding(request, data):
-
+def test_encoding(request, data) -> None:
+    """
+    Check that the method encodes test data correctly
+    Parameters:
+        data : pd.DataFrame
+            data_test - Test DataFrame provided by a fixture
+            real_data - Real DataFrame provided by a fixture
+    """
     df = request.getfixturevalue(data).copy()
     adp = AdvancedPreprocessor(df)
     adp.split_feature_types()
 
     encoding_data = adp.categorical_cols + adp.binary_cols
     df_before = adp.df[encoding_data].copy()
-
     adp.encoding()
 
     assert all(pd.api.types.is_numeric_dtype(adp.df[col]) for col in encoding_data)
@@ -29,7 +34,13 @@ def test_encoding(request, data):
     assert adp.df.shape[0] == df.shape[0]
 
 
-def test_remove_missing_negative(data_test):
+def test_remove_missing_negative(data_test) -> None:
+    """
+    Check that the method doesn't replace missing values when missing values are not present in the test data
+    Parameters:
+        data_test : pd.DataFrame
+            Test DataFrame provided by a fixture
+    """
     df = data_test.copy()
     mask_before = df.notna().all().all()
     adp = AdvancedPreprocessor(df)
@@ -43,7 +54,14 @@ def test_remove_missing_negative(data_test):
     assert adp.df.shape == df.shape
 
 
-def test_remove_missing_positive(data_test):
+def test_remove_missing_positive(data_test) -> None:
+    """
+    Check that the method replace missing values correctly when missing values are present in the test data
+    KNNImputer (number of neighbors = 5)
+    Parameters:
+        data_test : pd.DataFrame
+            Test DataFrame provided by a fixture
+    """
     df = data_test.copy()
     df.iloc[0:0] = np.nan
     adp = AdvancedPreprocessor(df)
@@ -55,19 +73,34 @@ def test_remove_missing_positive(data_test):
     assert adp.df.notna().all().all()
 
 
-def test_remove_missing_real_data(real_data):
+def test_remove_missing_real_data(real_data) -> None:
+    """
+    Check that the method replace missing values correctly when missing values are present in the real data
+    KNNImputer (number of neighbors = 5)
+    Parameters:
+        real_data : pd.DataFrame
+            Real DataFrame provided by a fixture
+    """
     df = real_data.copy()
     adp = AdvancedPreprocessor(df)
     adp.split_feature_types()
     adp.encoding()
     adp.remove_missing()
 
-    assert adp.df.shape[0] == df.shape[0] - 5 # Because there are 5 missing in the target and they were simply deleted.
+    # Because there are 5 missing in the target and they were simply deleted
+    assert adp.df.shape[0] == df.shape[0] - 5
     assert adp.df.notna().all().all()
 
 
 @pytest.mark.parametrize("data", ["data_test", "real_data"])
-def test_scaling(request, data):
+def test_scaling(request, data) -> None:
+    """
+    Check that the method scales data correctly
+    Parameters:
+        data : pd.DataFrame
+            data_test - Test DataFrame provided by a fixture
+            real_data - Real DataFrame provided by a fixture
+    """
     df = request.getfixturevalue(data).copy()
     adp = AdvancedPreprocessor(df)
     adp.split_feature_types()
@@ -76,7 +109,6 @@ def test_scaling(request, data):
 
     numeric_cols = adp.numeric_cols.copy()
     df_before = adp.df.copy()
-
     adp.scaling()
 
     assert all(np.issubdtype(adp.df[col].dtype, float) for col in numeric_cols)
@@ -88,26 +120,39 @@ def test_scaling(request, data):
 
     assert adp.df.shape == df_before.shape
 
+
 @pytest.mark.parametrize("data", ["data_test", "real_data"])
-def test_remove_outliers(request, data):
+def test_remove_outliers(request, data) -> None:
+    """
+    Check that the method removes outliers correctly
+    Parameters:
+        data : pd.DataFrame
+            data_test - Test DataFrame provided by a fixture
+            real_data - Real DataFrame provided by a fixture
+    """
     df = request.getfixturevalue(data).copy()
     adp = AdvancedPreprocessor(df)
-
     adp.split_feature_types()
     adp.encoding()
     adp.remove_missing()
     adp.scaling()
 
     df_before = adp.df.copy()
-
-    adp.remove_emissions()
+    adp.remove_outliers()
 
     assert adp.df.shape[0] < df_before.shape[0]
     assert all(col in adp.df.columns for col in df_before.columns)
 
 
 @pytest.mark.parametrize("data", ["data_test", "real_data"])
-def test_run(request, data):
+def test_run(request, data) -> None:
+    """
+    Check that the method encodes test data correctly
+    Parameters:
+        data : pd.DataFrame
+            data_test - Test DataFrame provided by a fixture
+            real_data - Real DataFrame provided by a fixture
+    """
     df = request.getfixturevalue(data)
     adp = AdvancedPreprocessor(df, 'HeartDisease')
     adp.run()

@@ -79,7 +79,6 @@ class AdvancedPreprocessor(BasePreprocessor):
         """
         Run full advanced preprocessing pipeline
         """
-
         self.remove_duplicates()
         super().split_feature_types()
         self.encoding()
