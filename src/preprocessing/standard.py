@@ -13,7 +13,7 @@ class StandardPreprocessor(BasePreprocessor):
     - Applies one-hot encoding using Scikit-Learn
     - Feature scaling with StandardScaler
     """
-    def __init__(self, df: pd.DataFrame, target: str = 'HeartDisease') -> None:
+    def __init__(self, df: pd.DataFrame, target: str = "HeartDisease") -> None:
         """
         Initializes StandardPreprocessor
         Parameters:
@@ -30,13 +30,16 @@ class StandardPreprocessor(BasePreprocessor):
         Replaces missing values with mean for numeric features
         and the mode for categorical, binary, target
         """
+        if self.df["HeartDisease"].isna().sum() > 0:
+            self.df = self.df.dropna()
         if super().check_missing():
             for feature in self.numeric_cols:
                 self.df[feature].fillna(self.df[feature].mean(), inplace=True)
 
-            features_moda = self.categorical_cols + self.binary_cols + [self.target_col]
+            features_moda = self.categorical_cols + self.binary_cols
             for feature in features_moda:
                 self.df[feature].fillna(self.df[feature].mode()[0], inplace=True)
+
 
 
     def remove_outliers(self) -> None:
