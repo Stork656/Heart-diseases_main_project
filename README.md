@@ -1,5 +1,4 @@
 # **Heart-diseases**
----
 ## **General Info**
 
 **Project:** Heart Failure Prediction
