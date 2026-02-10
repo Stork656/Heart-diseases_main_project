@@ -1,8 +1,5 @@
 # **Heart-diseases**
 ## **General Info**
-
-**Project:** Heart Failure Prediction
-
 **Date:** 2026
 
 **Data source:** https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction
