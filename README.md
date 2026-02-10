@@ -128,7 +128,7 @@ The best and the worst results in the table
 * **main.py** - the orchestrator
 * models, metrics, and logs are configured via yaml
   
-![ML Pipeline](assets/ML_Pipeline.jpg)
+![ML Pipeline](assets/ML_Pipeline.jpg.jpg)
 
 ## **Notes**
 1. Pipelines are fully configurable via YAML files.
