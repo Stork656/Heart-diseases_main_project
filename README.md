@@ -23,7 +23,7 @@
 
 The Data Set contains 918 records and 12 **attributes**:
 
-(*See the full analysis in the EDA*)
+(*See the full analysis notebooks\eda*)
 
 1. **Age** - age of the patient (years)
 2. **Sex** - sex of the patient
@@ -111,7 +111,7 @@ The performance of each pipeline and model was evaluated using the following **m
 Additionally, confusion matrices, ROC curves, and PR curves were analyzed.
 
 ## **Results**  
-(*Full analysis of the results see evaluation_analysis*)
+(*Full analysis of the results see  \notebooks\evaluation_analysis*)
 
 The best and the worst results in the table
 
@@ -139,15 +139,11 @@ The best and the worst results in the table
 Developed and tested using Python 3.14
 
 Libraries:
-* pathlib
 * PyYAML
-* logging
-* typing
 * pandas
 * pytest
 * numpy
 * sklearn
-* importlib
 * joblib
 * matplotlib
 * seaborn
