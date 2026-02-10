@@ -27,6 +27,9 @@ def setup_logging(path: Path = Path("configs/logging.yaml")) -> logging.Logger:
         logging.Logger
             Logger instance configured according to the YAML file
     """
+    # If dir not exists
+    Path("logs").mkdir(parents=True, exist_ok=True)
+
     # File exist check
     if not path.is_file():
         raise FileNotFoundError(f"File {path} not found")
