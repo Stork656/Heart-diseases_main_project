@@ -1,13 +1,17 @@
 # **Heart-diseases**
 ## **General Info**
 
-**Project:** Heart Failure Prediction
+**Version:** 1.0
 
 **Date:** 2026
 
 **Data source:** https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction
 
 **Goal:** identify the best preprocessing pipeline and model for predicting heart failure
+## **Table of contents**
+1.
+2.
+3.
 
 ## **Data Description**
 
@@ -109,3 +113,10 @@ The best and the worst results in the table
 |-------|-----|-------|-------|-----|
 |Advanced Preprocessing|Gradient Boosting|0.91|0.84|0.90|
 |Simple Preprocessing|KNN|0.74|0.66|0.73|
+
+
+## **Notes**
+1. Pipelines are fully configurable via YAML files.
+2. In the current version of the project, tests and validation are not fully covered. 
+3. Improvements are planned in future versions.
+
