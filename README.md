@@ -107,6 +107,8 @@ The performance of each pipeline and model was evaluated using the following **m
 Additionally, confusion matrices, ROC curves, and PR curves were analyzed.
 
 ## **Results**  
+(*Full analysis of the results see evaluation_analysis*)
+
 The best and the worst results in the table
 
 |Pipeline|Model|Recall|Precision|F2|
