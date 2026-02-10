@@ -132,8 +132,14 @@ The best and the worst results in the table
 
 ## **Notes**
 1. Pipelines are fully configurable via YAML files.
-2. In the current version of the project, tests and validation are not fully covered.
-3. Improvements are planned in future versions.
+2. the tests cover part of the project at the moment:
+   * src\preprocessing
+   * src\utils\validator
+3. Validator cover part of the project at the moment:
+   * src\preprocessing
+   * loader
+   * main
+5. Improvements are planned in future versions.
 
 ## **Technologies Used**
 Developed and tested using Python 3.14
@@ -143,7 +149,7 @@ Libraries:
 * pandas
 * pytest
 * numpy
-* sklearn
+* scikit-learn
 * joblib
 * matplotlib
 * seaborn
@@ -151,3 +157,4 @@ Libraries:
 Analysis performed using Jupyter Notebook.
 
 ## **How to run**
+Detailed instructions will be provided later
