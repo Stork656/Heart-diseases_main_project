@@ -122,4 +122,36 @@ The best and the worst results in the table
 
 
 ## **Project Structure**
+![Project_Structure](assets/Project_Structure.jpg)
 
+## **Full ML Pipeline**
+* **main.py** - the orchestrator
+* models, metrics, and logs are configured via yaml
+  
+![ML Pipeline](assets/ML_Pipeline.jpg)
+
+## **Notes**
+1. Pipelines are fully configurable via YAML files.
+2. In the current version of the project, tests and validation are not fully covered.
+3. Improvements are planned in future versions.
+
+## **Technologies Used**
+Developed and tested using Python 3.14
+
+Libraries:
+* pathlib
+* PyYAML
+* logging
+* typing
+* pandas
+* pytest
+* numpy
+* sklearn
+* importlib
+* joblib
+* matplotlib
+* seaborn
+
+Analysis performed using Jupyter Notebook.
+
+## **How to run**
