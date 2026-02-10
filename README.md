@@ -1,5 +1,8 @@
 # **Heart-diseases**
 ## **General Info**
+
+**Project:** Heart Failure Prediction
+
 **Date:** 2026
 
 **Data source:** https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction
@@ -7,6 +10,10 @@
 **Goal:** identify the best preprocessing pipeline and model for predicting heart failure
 
 ## **Data Description**
+
+The Data Set contains 918 records and 12 **attributes**:
+
+(*See the full analysis in the EDA*)
 
 1. **Age** - age of the patient (years)
 2. **Sex** - sex of the patient
@@ -48,7 +55,9 @@
     * 0 - Normal
 
 
-## **Project Description** 
+
+
+## **Project Description**
 The project performs an EDA analysis, based on which the necessary data preprocessing steps are determined and 3 methods are implemented that differ in the methods of performing these steps:
 1. **Simple pipeline**
 
