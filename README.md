@@ -9,9 +9,15 @@
 
 **Goal:** identify the best preprocessing pipeline and model for predicting heart failure
 ## **Table of contents**
-1.
-2.
-3.
+1. [General Info](#General-Info)
+2. [Data Description](#Data-Description)
+3. [Project Description](#Project-Description)
+4. [Results](#Results)
+5. [Project Structure](#Project-Structure)
+6. [Full ML Pipeline](#Full-ML-Pipeline)
+7. [Notes](#Notes)
+8. [Technologies Used](#Technologies-Used)
+9. [How To Run](#How-To-Run)
 
 ## **Data Description**
 
@@ -57,8 +63,6 @@ The Data Set contains 918 records and 12 **attributes**:
 12. **HeartDisease** - output class
     * 1 - heart disease
     * 0 - Normal
-
-
 
 
 ## **Project Description**
@@ -117,8 +121,5 @@ The best and the worst results in the table
 |Simple Preprocessing|KNN|0.74|0.66|0.73|
 
 
-## **Notes**
-1. Pipelines are fully configurable via YAML files.
-2. In the current version of the project, tests and validation are not fully covered. 
-3. Improvements are planned in future versions.
+## **Project Structure**
 
