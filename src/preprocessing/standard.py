@@ -35,11 +35,13 @@ class StandardPreprocessor(BasePreprocessor):
 
         if super().check_missing():
             for feature in self.numeric_cols:
-                self.df[feature].fillna(self.df[feature].mean(), inplace=True)
+                self.df[feature] = self.df[feature].fillna(self.df[feature].mean())
 
             features_moda = self.categorical_cols + self.binary_cols
             for feature in features_moda:
-                self.df[feature].fillna(self.df[feature].mode()[0], inplace=True)
+                self.df[feature] = self.df[feature].fillna(self.df[feature].mode()[0])
+
+            super().check_missing()
 
 
     def remove_outliers(self) -> None:

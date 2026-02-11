@@ -56,6 +56,7 @@ class AdvancedPreprocessor(BasePreprocessor):
             )
 
             self.df[features.columns] = features_imputed
+            super().check_missing()
 
 
     def scaling(self) -> None:

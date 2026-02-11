@@ -72,7 +72,7 @@ class BasePreprocessor:
         """
         if self.validator.check_column_exist(self.df, ["Cholesterol"]):
             n_zeros = (self.df["Cholesterol"] == 0).sum()
-            self.df["Cholesterol"].replace(0, np.nan, inplace=True)
+            self.df["Cholesterol"] = self.df["Cholesterol"].replace(0, np.nan)
             self.logger.info(f"Replaced {n_zeros} zeros with NaN in Cholesterol column")
 
 

@@ -28,9 +28,9 @@ class SimplePreprocessor(BasePreprocessor):
         Removes rows with missing values
         """
         if super().check_missing():
-            self.df.dropna(inplace = True)
-            self.df.reset_index(drop = True)
+            self.df = self.df.dropna().reset_index(drop = True)
             self.logger.info(f'Rows with missing values deleted')
+            super().check_missing()
 
 
     def remove_outliers(self) -> None:
