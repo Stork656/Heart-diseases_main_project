@@ -147,7 +147,7 @@ class Validator:
             self.logger.warning(f"Missing values found:\n{missing}")
             return True
 
-        self.logger.info("No missing values found")
+        self.logger.info(f"No missing values found \n{df.isna().sum()}")
         return False
 
 
