@@ -7,7 +7,8 @@
 
 **Data source:** https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction
 
-**Goal:** identify the best preprocessing pipeline and model for predicting heart failure
+**Goal:** To identify the best preprocessing pipeline and model for predicting heart failure.
+
 ## **Table of contents**
 1. [General Info](#General-Info)
 2. [Data Description](#Data-Description)
@@ -111,7 +112,7 @@ The performance of each pipeline and model was evaluated using the following **m
 Additionally, confusion matrices, ROC curves, and PR curves were analyzed.
 
 ## **Results**  
-(*Full analysis of the results see  \notebooks\evaluation_analysis*)
+(*For full analysis, see notebooks/evaluation_analysis.ipynb. The results after repeated training may differ from those indicated in the analysis*)
 
 The best and the worst results in the table
 
@@ -132,10 +133,10 @@ The best and the worst results in the table
 
 ## **Notes**
 1. Pipelines are fully configurable via YAML files.
-2. the tests cover part of the project at the moment:
+2. The tests currently cover part of the project:
    * src\preprocessing
    * src\utils\validator
-3. Validator cover part of the project at the moment:
+3. The validator currently covers part of the project:
    * src\preprocessing
    * loader
    * main
@@ -145,16 +146,86 @@ The best and the worst results in the table
 Developed and tested using Python 3.14
 
 Libraries:
-* PyYAML
-* pandas
-* pytest
-* numpy
-* scikit-learn
-* joblib
-* matplotlib
-* seaborn
+* numpy == 2.3.5
+* pandas == 2.3.3
+* scikit-learn == 1.8.0
+* joblib == 1.5.3
+* PyYAML == 6.0.3
+* matplotlib == 3.10.8
+* seaborn == 0.13.2
+* pytest == 9.0.2
 
 Analysis performed using Jupyter Notebook.
 
 ## **How to run**
-Detailed instructions will be provided later
+**1. Python Installation**
+* If Python is not installed, download and install it from [Python.org](https://www.python.org/)
+
+* To check if Python is installed, open **cmd** and run:
+    ```
+    python --version
+    ```
+
+  If Python is installed, you'll see a version number.
+  
+  For example:
+
+    ```
+    Python 3.14.0
+    ```
+**2. Downloading the Project**
+* Go to the project: [Project](https://github.com/Stork656/Heart-diseases_main_project)
+* Click: **Code → Download ZIP**
+
+**3. Installation**
+
+* Unpack the archive.
+
+* Open **cmd** and navigate to the **root folder** of the project:
+
+    ```
+    cd path_to_unpacked_folder
+    ```
+* Create a virtual environment:
+
+    ```
+    python -m venv venv
+    ```
+* Activate the virtual environment:
+
+    ```
+    venv\Scripts\activate
+    ```
+* Install dependencies:
+
+    ```
+    pip install -r requirements.txt
+    ```
+    Wait for the installation to complete.
+
+**4. Running the Project**
+
+* To start training run:
+    ```
+    python main.py
+    ```
+    Wait until the training process finishes.
+
+**5. Viewing Results**
+
+* Quick results:
+    ```
+    cd src\utils
+    python see_results.py
+    ```
+* For full analysis of the results, you will need an IDE, such as Jupyter: [jupyter.org](https://jupyter.org/try)
+* Open `notebooks/evaluation_analysis.ipynb` to explore the detailed results. 
+
+    **Note:** the results after repeated training may differ from those indicated in the analysis.
+* You can also explore the Exploratory Data Analysis (EDA) by running `eda.ipynb`
+
+## **Contact**
+
+Thank you for your interest in this project!
+
+If you have any questions or suggestions, please open an issue on GitHub.
